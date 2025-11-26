@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  adapter  = "file:./dev.db"
+}
+
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("USER")
+  recipes   Recipe[]
+  lists     ShoppingList[]
+}
+
+model Recipe {
+  id          Int          @id @default(autoincrement())
+  title       String
+  description String?
+  isPublic    Boolean      @default(false)
+  user        User         @relation(fields: [userId], references: [id])
+  userId      Int
+  ingredients Ingredient[]
+}
+
+model Ingredient {
+  id          Int       @id @default(autoincrement())
+  name        String
+  unit        String?
+  quantity    Float?
+  recipe      Recipe?   @relation(fields: [recipeId], references: [id])
+  recipeId    Int?
+  user        User?     @relation(fields: [userId], references: [id])
+  userId      Int?
+}
+
+model ShoppingList {
+  id     Int     @id @default(autoincrement())
+  title  String
+  user   User    @relation(fields: [userId], references: [id])
+  userId Int
+}
