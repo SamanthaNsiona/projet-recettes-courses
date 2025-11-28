@@ -1,12 +1,12 @@
-import { Router } from "express";
-import {
+const { Router } = require("express");
+const {
   createRecipe,
   getRecipes,
   getRecipeById,
   updateRecipe,
   deleteRecipe
-} from "../controllers/recipeController.js";
-import { protect } from "../middleware/authMiddleware.js";
+} = require("../controllers/recipeController");
+const { protect } = require("../middleware/authMiddleware");
 
 const router = Router();
 
@@ -16,4 +16,4 @@ router.get("/:id", protect, getRecipeById);   // 🧪 Voir une recette
 router.put("/:id", protect, updateRecipe);    // ✏️ Modifier
 router.delete("/:id", protect, deleteRecipe); // ❌ Supprimer
 
-export default router;
+module.exports = router;

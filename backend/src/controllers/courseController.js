@@ -2,7 +2,7 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 // GET all courses
-exports.getCourses = async (req, res) => {
+const getCourses = async (req, res) => {
   try {
     const courses = await prisma.course.findMany();
     res.json(courses);
@@ -12,7 +12,7 @@ exports.getCourses = async (req, res) => {
 };
 
 // POST create a course
-exports.createCourse = async (req, res) => {
+const createCourse = async (req, res) => {
   try {
     const { name, quantity, unit } = req.body;
 
@@ -27,7 +27,7 @@ exports.createCourse = async (req, res) => {
 };
 
 // PUT update
-exports.updateCourse = async (req, res) => {
+const updateCourse = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     const { name, quantity, unit } = req.body;
@@ -44,7 +44,7 @@ exports.updateCourse = async (req, res) => {
 };
 
 // DELETE
-exports.deleteCourse = async (req, res) => {
+const deleteCourse = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
 
@@ -55,3 +55,5 @@ exports.deleteCourse = async (req, res) => {
     res.status(500).json({ error: "Erreur serveur" });
   }
 };
+
+module.exports = { getCourses, createCourse, updateCourse, deleteCourse };

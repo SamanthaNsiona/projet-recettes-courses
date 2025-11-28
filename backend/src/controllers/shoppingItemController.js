@@ -1,7 +1,7 @@
-import { PrismaClient } from "@prisma/client";
+const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-export const getItems = async (req, res) => {
+const getItems = async (req, res) => {
   try {
     const listId = parseInt(req.params.listId);
 
@@ -15,7 +15,7 @@ export const getItems = async (req, res) => {
   }
 };
 
-export const addItem = async (req, res) => {
+const addItem = async (req, res) => {
   try {
     const listId = parseInt(req.params.listId);
     const { name, quantity, unit } = req.body;
@@ -30,7 +30,7 @@ export const addItem = async (req, res) => {
   }
 };
 
-export const updateItem = async (req, res) => {
+const updateItem = async (req, res) => {
   try {
     const itemId = parseInt(req.params.itemId);
     const { name, quantity, unit } = req.body;
@@ -46,7 +46,7 @@ export const updateItem = async (req, res) => {
   }
 };
 
-export const deleteItem = async (req, res) => {
+const deleteItem = async (req, res) => {
   try {
     const itemId = parseInt(req.params.itemId);
 
@@ -59,3 +59,5 @@ export const deleteItem = async (req, res) => {
     res.status(500).json({ error: "Erreur serveur" });
   }
 };
+
+module.exports = { getItems, addItem, updateItem, deleteItem };

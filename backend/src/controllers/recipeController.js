@@ -1,8 +1,8 @@
-import { PrismaClient } from "@prisma/client";
+const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 // 📌 0. Créer une recette
-export const createRecipe = async (req, res) => {
+const createRecipe = async (req, res) => {
   try {
     const { title, description, isPublic } = req.body;
     const recipe = await prisma.recipe.create({
@@ -20,7 +20,7 @@ export const createRecipe = async (req, res) => {
 };
 
 // 📌 1. Récupérer les recettes de l'utilisateur connecté
-export const getRecipes = async (req, res) => {
+const getRecipes = async (req, res) => {
   try {
     const recipes = await prisma.recipe.findMany({
       where: { userId: req.user.id }
@@ -32,7 +32,7 @@ export const getRecipes = async (req, res) => {
 };
 
 // 📌 2. Récupérer UNE recette
-export const getRecipeById = async (req, res) => {
+const getRecipeById = async (req, res) => {
   try {
     const recipe = await prisma.recipe.findUnique({
       where: { id: parseInt(req.params.id) }
@@ -47,7 +47,7 @@ export const getRecipeById = async (req, res) => {
 };
 
 // 📌 3. Modifier une recette
-export const updateRecipe = async (req, res) => {
+const updateRecipe = async (req, res) => {
   try {
     const { title, description, isPublic } = req.body;
     const recipe = await prisma.recipe.update({
@@ -61,7 +61,7 @@ export const updateRecipe = async (req, res) => {
 };
 
 // 📌 4. Supprimer une recette
-export const deleteRecipe = async (req, res) => {
+const deleteRecipe = async (req, res) => {
   try {
     const recipe = await prisma.recipe.findUnique({
       where: { id: parseInt(req.params.id) }
@@ -78,4 +78,6 @@ export const deleteRecipe = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+module.exports = { createRecipe, getRecipes, getRecipeById, updateRecipe, deleteRecipe };
 

@@ -1,7 +1,7 @@
-import { PrismaClient } from "@prisma/client";
+const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-export const getLists = async (req, res) => {
+const getLists = async (req, res) => {
   try {
     const lists = await prisma.shoppingList.findMany({
       include: { items: true }
@@ -12,7 +12,7 @@ export const getLists = async (req, res) => {
   }
 };
 
-export const createList = async (req, res) => {
+const createList = async (req, res) => {
   try {
     const { title, userId } = req.body;
 
@@ -26,7 +26,7 @@ export const createList = async (req, res) => {
   }
 };
 
-export const updateList = async (req, res) => {
+const updateList = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     const { title } = req.body;
@@ -42,7 +42,7 @@ export const updateList = async (req, res) => {
   }
 };
 
-export const deleteList = async (req, res) => {
+const deleteList = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
 
@@ -53,3 +53,5 @@ export const deleteList = async (req, res) => {
     res.status(500).json({ error: "Erreur serveur" });
   }
 };
+
+module.exports = { getLists, createList, updateList, deleteList };

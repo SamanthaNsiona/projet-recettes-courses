@@ -1,8 +1,8 @@
 // src/controllers/shoppingListController.js
-import prisma from "../utils/prismaClient.js"; // si tu utilises Prisma
+const prisma = require("../utils/prismaClient"); // si tu utilises Prisma
 
 // Récupérer toutes les listes de courses d'un utilisateur
-export const getShoppingLists = async (req, res) => {
+const getShoppingLists = async (req, res) => {
   try {
     const lists = await prisma.shoppingList.findMany({
       where: { userId: req.user.id }
@@ -14,7 +14,7 @@ export const getShoppingLists = async (req, res) => {
 };
 
 // Créer une nouvelle liste de courses
-export const createShoppingList = async (req, res) => {
+const createShoppingList = async (req, res) => {
   const { title } = req.body;
   try {
     const newList = await prisma.shoppingList.create({
@@ -30,7 +30,7 @@ export const createShoppingList = async (req, res) => {
 };
 
 // Mettre à jour une liste
-export const updateShoppingList = async (req, res) => {
+const updateShoppingList = async (req, res) => {
   const { id } = req.params;
   const { title } = req.body;
   try {
@@ -45,7 +45,7 @@ export const updateShoppingList = async (req, res) => {
 };
 
 // Supprimer une liste
-export const deleteShoppingList = async (req, res) => {
+const deleteShoppingList = async (req, res) => {
   const { id } = req.params;
   try {
     await prisma.shoppingList.delete({ where: { id: Number(id) } });
@@ -54,3 +54,5 @@ export const deleteShoppingList = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+module.exports = { getShoppingLists, createShoppingList, updateShoppingList, deleteShoppingList };

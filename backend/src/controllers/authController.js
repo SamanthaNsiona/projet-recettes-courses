@@ -1,10 +1,10 @@
-import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcryptjs";
-import { generateToken } from "../utils/generateToken.js";
+const { PrismaClient } = require("@prisma/client");
+const bcrypt = require("bcryptjs");
+const { generateToken } = require("../utils/generateToken");
 
 const prisma = new PrismaClient();
 
-export const register = async (req, res) => {
+const register = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
 
@@ -35,7 +35,7 @@ export const register = async (req, res) => {
   }
 };
 
-export const login = async (req, res) => {
+const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
