@@ -1,0 +1,55 @@
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
+
+export const getLists = async (req, res) => {
+  try {
+    const lists = await prisma.shoppingList.findMany({
+      include: { items: true }
+    });
+    res.json(lists);
+  } catch {
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+};
+
+export const createList = async (req, res) => {
+  try {
+    const { title, userId } = req.body;
+
+    const list = await prisma.shoppingList.create({
+      data: { title, userId }
+    });
+
+    res.status(201).json(list);
+  } catch {
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+};
+
+export const updateList = async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const { title } = req.body;
+
+    const list = await prisma.shoppingList.update({
+      where: { id },
+      data: { title }
+    });
+
+    res.json(list);
+  } catch {
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+};
+
+export const deleteList = async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+
+    await prisma.shoppingList.delete({ where: { id } });
+
+    res.json({ message: "Liste supprimée" });
+  } catch {
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+};
