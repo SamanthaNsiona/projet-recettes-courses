@@ -19,14 +19,17 @@ model User {
 }
 
 model Recipe {
-  id          Int          @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   title       String
   description String?
-  isPublic    Boolean      @default(false)
-  user        User         @relation(fields: [userId], references: [id])
+  ingredients String   // texte simple
+  steps       String   // texte simple
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
   userId      Int
-  ingredients Ingredient[]
+  user        User     @relation(fields: [userId], references: [id])
 }
+
 
 model Ingredient {
   id       Int     @id @default(autoincrement())
