@@ -7,8 +7,8 @@ const getLists = async (req, res) => {
       include: { items: true }
     });
     res.json(lists);
-  } catch {
-    res.status(500).json({ error: "Erreur serveur" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -21,8 +21,8 @@ const createList = async (req, res) => {
     });
 
     res.status(201).json(list);
-  } catch {
-    res.status(500).json({ error: "Erreur serveur" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -37,8 +37,8 @@ const updateList = async (req, res) => {
     });
 
     res.json(list);
-  } catch {
-    res.status(500).json({ error: "Erreur serveur" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -49,8 +49,8 @@ const deleteList = async (req, res) => {
     await prisma.shoppingList.delete({ where: { id } });
 
     res.json({ message: "Liste supprimée" });
-  } catch {
-    res.status(500).json({ error: "Erreur serveur" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 

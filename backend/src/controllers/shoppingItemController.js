@@ -10,8 +10,8 @@ const getItems = async (req, res) => {
     });
 
     res.json(items);
-  } catch {
-    res.status(500).json({ error: "Erreur serveur" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -25,8 +25,8 @@ const addItem = async (req, res) => {
     });
 
     res.status(201).json(item);
-  } catch {
-    res.status(500).json({ error: "Erreur serveur" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -41,8 +41,8 @@ const updateItem = async (req, res) => {
     });
 
     res.json(item);
-  } catch {
-    res.status(500).json({ error: "Erreur serveur" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -55,8 +55,8 @@ const deleteItem = async (req, res) => {
     });
 
     res.json({ message: "Item supprimé" });
-  } catch {
-    res.status(500).json({ error: "Erreur serveur" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 
