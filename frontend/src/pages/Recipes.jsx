@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
 import { recipeService } from '../services/recipeService';
 import { PlusIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+import IngredientList from '../components/IngredientList';
+import RecipeCard from '../components/RecipeCard';
 
 export default function Recipes() {
   const [recipes, setRecipes] = useState([]);
+  const [expanded, setExpanded] = useState({});
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingRecipe, setEditingRecipe] = useState(null);
@@ -145,29 +148,16 @@ export default function Recipes() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {recipes.map((recipe) => (
-          <div key={recipe.id} className="bg-white p-4 rounded-lg shadow-md">
-            <h3 className="text-xl font-semibold mb-2">{recipe.title}</h3>
-            <p className="text-gray-600 mb-4">{recipe.description}</p>
-            <div className="flex justify-between items-center">
-              <span className={`text-sm ${recipe.isPublic ? 'text-green-600' : 'text-gray-500'}`}>
-                {recipe.isPublic ? 'Public' : 'Privé'}
-              </span>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => handleEdit(recipe)}
-                  className="p-2 text-blue-600 hover:bg-blue-50 rounded"
-                >
-                  <PencilIcon className="h-5 w-5" />
-                </button>
-                <button
-                  onClick={() => handleDelete(recipe.id)}
-                  className="p-2 text-red-600 hover:bg-red-50 rounded"
-                >
-                  <TrashIcon className="h-5 w-5" />
-                </button>
-              </div>
-            </div>
-          </div>
+          <RecipeCard
+            key={recipe.id}
+            recipe={recipe}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            onToggleIngredients={(id) => setExpanded((s) => ({ ...s, [id]: !s[id] }))}
+            expanded={!!expanded[recipe.id]}
+          >
+            {expanded[recipe.id] && <IngredientList recipe={recipe} onUpdated={loadRecipes} />}
+          </RecipeCard>
         ))}
       </div>
 
