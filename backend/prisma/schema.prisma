@@ -9,14 +9,16 @@ datasource db {
 
 
 model User {
-  id          Int            @id @default(autoincrement())
-  name        String
-  email       String         @unique
-  password    String
-  role        String         @default("USER")
-  recipes     Recipe[]
-  lists       ShoppingList[]
-  ingredients Ingredient[]
+  id                   Int            @id @default(autoincrement())
+  name                 String
+  email                String         @unique
+  password             String
+  role                 String         @default("USER")
+  resetPasswordToken   String?
+  resetPasswordExpiry  DateTime?
+  recipes              Recipe[]
+  lists                ShoppingList[]
+  ingredients          Ingredient[]
 }
 
 model Recipe {

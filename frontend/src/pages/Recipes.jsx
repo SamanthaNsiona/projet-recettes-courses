@@ -67,64 +67,64 @@ export default function Recipes() {
   };
 
   if (loading) {
-    return <div className="text-center p-8">Chargement...</div>;
+    return <div className="text-center py-16 text-xs tracking-[0.2em] uppercase text-neutral-600">Chargement...</div>;
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Mes Recettes</h1>
+    <div className="max-w-7xl mx-auto px-6 py-12">
+      <div className="flex justify-between items-center mb-16">
+        <h1 className="title-main text-2xl">MES RECETTES</h1>
         <button
           onClick={() => {
             setShowForm(!showForm);
             setEditingRecipe(null);
             setFormData({ title: '', description: '', isPublic: false });
           }}
-          className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+          className="flex items-center gap-3 bg-neutral-900 text-white px-6 py-3 hover:bg-neutral-800 transition-colors text-xs tracking-[0.2em] uppercase"
         >
-          <PlusIcon className="h-5 w-5" />
+          <PlusIcon className="h-4 w-4" />
           Nouvelle recette
         </button>
       </div>
 
       {showForm && (
-        <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-          <h3 className="text-xl font-semibold mb-4">
+        <div className="border-b border-neutral-200 pb-12 mb-12">
+          <h3 className="text-xs font-light tracking-[0.2em] uppercase mb-8 text-neutral-600">
             {editingRecipe ? 'Modifier la recette' : 'Nouvelle recette'}
           </h3>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-8">
             <div>
-              <label className="block text-gray-700 font-medium mb-2">Titre</label>
+              <label className="block text-xs tracking-wider uppercase text-neutral-600 mb-3">Titre</label>
               <input
                 type="text"
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-0 py-3 border-0 border-b border-neutral-300 bg-transparent focus:border-neutral-900 focus:outline-none text-sm transition-colors"
                 required
               />
             </div>
             <div>
-              <label className="block text-gray-700 font-medium mb-2">Description</label>
+              <label className="block text-xs tracking-wider uppercase text-neutral-600 mb-3">Description</label>
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-0 py-3 border-0 border-b border-neutral-300 bg-transparent focus:border-neutral-900 focus:outline-none text-sm transition-colors resize-none"
                 rows="4"
               />
             </div>
-            <div className="flex items-center">
+            <div className="flex items-center gap-3">
               <input
                 type="checkbox"
                 checked={formData.isPublic}
                 onChange={(e) => setFormData({ ...formData, isPublic: e.target.checked })}
-                className="mr-2"
+                className="w-4 h-4 border-neutral-300"
               />
-              <label className="text-gray-700">Recette publique</label>
+              <label className="text-xs tracking-wider uppercase text-neutral-600">Recette publique</label>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-4 pt-4">
               <button
                 type="submit"
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                className="bg-neutral-900 text-white px-8 py-4 hover:bg-neutral-800 transition-colors text-xs tracking-[0.2em] uppercase"
               >
                 {editingRecipe ? 'Modifier' : 'Créer'}
               </button>
@@ -134,7 +134,7 @@ export default function Recipes() {
                   setShowForm(false);
                   setEditingRecipe(null);
                 }}
-                className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400"
+                className="bg-neutral-200 text-neutral-900 px-8 py-4 hover:bg-neutral-300 transition-colors text-xs tracking-[0.2em] uppercase"
               >
                 Annuler
               </button>
@@ -143,27 +143,29 @@ export default function Recipes() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {recipes.map((recipe) => (
-          <div key={recipe.id} className="bg-white p-4 rounded-lg shadow-md">
-            <h3 className="text-xl font-semibold mb-2">{recipe.title}</h3>
-            <p className="text-gray-600 mb-4">{recipe.description}</p>
+          <div key={recipe.id} className="border-b border-neutral-200 pb-6">
+            <h3 className="text-sm font-light tracking-wide mb-4">{recipe.title}</h3>
+            <p className="text-neutral-600 text-xs leading-relaxed mb-6">{recipe.description}</p>
             <div className="flex justify-between items-center">
-              <span className={`text-sm ${recipe.isPublic ? 'text-green-600' : 'text-gray-500'}`}>
+              <span className={`text-xs tracking-wider uppercase ${recipe.isPublic ? 'text-neutral-900' : 'text-neutral-400'}`}>
                 {recipe.isPublic ? 'Public' : 'Privé'}
               </span>
-              <div className="flex gap-2">
+              <div className="flex gap-3">
                 <button
                   onClick={() => handleEdit(recipe)}
-                  className="p-2 text-blue-600 hover:bg-blue-50 rounded"
+                  className="flex items-center gap-2 px-4 py-2 border border-neutral-900 text-neutral-900 hover:bg-neutral-900 hover:text-white transition-colors text-xs uppercase"
                 >
-                  <PencilIcon className="h-5 w-5" />
+                  <PencilIcon className="h-4 w-4" />
+                  Modifier
                 </button>
                 <button
                   onClick={() => handleDelete(recipe.id)}
-                  className="p-2 text-red-600 hover:bg-red-50 rounded"
+                  className="flex items-center gap-2 px-4 py-2 border border-neutral-900 text-neutral-900 hover:bg-neutral-900 hover:text-white transition-colors text-xs uppercase"
                 >
-                  <TrashIcon className="h-5 w-5" />
+                  <TrashIcon className="h-4 w-4" />
+                  Supprimer
                 </button>
               </div>
             </div>
@@ -172,7 +174,7 @@ export default function Recipes() {
       </div>
 
       {recipes.length === 0 && (
-        <p className="text-center text-gray-500 mt-8">
+        <p className="text-center text-neutral-400 mt-12 text-xs tracking-wider uppercase">
           Aucune recette. Cliquez sur "Nouvelle recette" pour commencer.
         </p>
       )}

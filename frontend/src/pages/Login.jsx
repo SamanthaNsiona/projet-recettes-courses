@@ -25,55 +25,68 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8">
-        <h2 className="text-3xl font-bold text-center mb-6">Connexion</h2>
+    <div className="min-h-screen flex items-center justify-center bg-neutral-50 px-6">
+      <div className="max-w-md flex flex-col" style={{ padding: '45px 35px', border: '1px solid #d1d5db', backgroundColor: '#acacac02' }}>
+        <h2 className="title-main text-2xl text-center text-neutral-800" style={{ marginBottom: '50px' }}>
+          CONNEXION
+        </h2>
         
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          <div className="border-l-2 border-neutral-900 bg-neutral-100 px-12 py-16 mb-8 text-sm text-neutral-700">
             {error}
-          </div>
+          </div>    
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-gray-700 font-medium mb-2">
+        <form onSubmit={handleSubmit} className="space-y-8 flex flex-col items-center">
+          <div className="w-80">
+            <label className="block text-body text-xs uppercase text-neutral-600 mb-3">
               Email
             </label>
             <input
               type="email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              required
+              className="w-full px-0 py-3 border-0 border-b border-neutral-300 bg-transparent focus:outline-none focus:border-neutral-900 transition-colors text-neutral-900"
+              required style={{ paddingBottom: '5px' }}
             />
           </div>
 
-          <div>
-            <label className="block text-gray-700 font-medium mb-2">
+          <div className="w-80">
+            <label className="block text-body text-xs uppercase text-neutral-600 mb-3" style={{ paddingTop: '10px' }}>
               Mot de passe
             </label>
             <input
               type="password"
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              required
+              className="w-full px-0 py-3 border-0 border-b border-neutral-300 bg-transparent focus:outline-none focus:border-neutral-900 transition-colors text-neutral-900"
+              required style={{ paddingBottom: '5px' }}
             />
           </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 font-medium"
-          >
-            {loading ? 'Connexion...' : 'Se connecter'}
-          </button>
+          <div className="flex flex-col items-center gap-4" style={{ marginTop: '30px' }}>
+            <button
+              type="submit"
+              disabled={loading}
+              className="bg-gray-400/30 text-neutral-900 text-sm uppercase hover:bg-gray-400/50 disabled:opacity-50 transition-colors duration-300"
+              style={{ fontFamily: 'Arial, sans-serif', padding: '10px 25px', border: '1px solid #d1d5db', color: '#434547ff' }}
+            >
+              {loading ? 'Connexion...' : 'Se connecter'}
+            </button>
+            
+            <Link 
+              to="/forgot-password" 
+              className="text-xs text-neutral-600 hover:text-neutral-900 transition-opacity no-underline flex items-center gap-2"
+              style={{ marginTop: '12px' }}
+            >
+              Mot de passe oublié ?
+            </Link>
+          </div>
         </form>
 
-        <p className="text-center mt-4 text-gray-600">
-          Pas encore de compte?{' '}
-          <Link to="/register" className="text-blue-600 hover:underline">
+        <p className="text-center mt-12 text-xs tracking-wider text-neutral-500 uppercase flex justify-center" style={{gap: '2px' }}>
+          <span>Pas encore de compte?</span>
+          <Link to="/register" className="text-neutral-900 hover:opacity-60 transition-opacity no-underline">
             S'inscrire
           </Link>
         </p>

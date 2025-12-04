@@ -12,6 +12,16 @@ const courseRoutes = require("./src/routes/courseRoutes");
 
 dotenv.config();
 
+// Définir les variables d'environnement par défaut si non définies
+if (!process.env.EMAIL_USER) process.env.EMAIL_USER = "MyRecipesdev@gmail.com";
+if (!process.env.EMAIL_PASSWORD) process.env.EMAIL_PASSWORD = "zedamgjyubhlllql";
+if (!process.env.FRONTEND_URL) process.env.FRONTEND_URL = "http://localhost:5173";
+
+console.log('✅ Variables EMAIL chargées:', {
+  EMAIL_USER: process.env.EMAIL_USER,
+  EMAIL_PASSWORD: process.env.EMAIL_PASSWORD ? '***' : 'NON DEFINI'
+});
+
 const app = express();
 
 app.use(cors());
@@ -33,5 +43,39 @@ app.get("/api/test", protect, (req, res) => {
   res.json({ message: "Route protégée OK 🔒", user: req.user });
 });
 
+// Gestion des erreurs globales
+app.use((err, req, res, next) => {
+  console.error('❌ ERREUR SERVEUR:', err);
+  res.status(500).json({ message: err.message });
+});
+
+// Gestion des erreurs non gérées - EMPÊCHER LE CRASH
+process.on('uncaughtException', (err) => {
+  console.error('❌ UNCAUGHT EXCEPTION (serveur continue):', err);
+  // Ne pas terminer le processus
+});
+
+process.on('unhandledRejection', (err) => {
+  console.error('❌ UNHANDLED REJECTION (serveur continue):', err);
+  // Ne pas terminer le processus
+});
+
+// Empêcher la fermeture du serveur
+process.on('SIGTERM', () => {
+  console.log('⚠️  SIGTERM reçu - IGNORÉ');
+});
+
+process.on('SIGINT', () => {
+  console.log('⚠️  SIGINT reçu - IGNORÉ');
+});
+
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+const server = app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log('📧 Email:', process.env.EMAIL_USER);
+});
+
+// Garder le processus actif
+setInterval(() => {
+  // Heartbeat pour garder le serveur vivant
+}, 60000);
