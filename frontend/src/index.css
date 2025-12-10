@@ -1,68 +1,181 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Marcellus&family=Lora:wght@400;500&family=Poppins:wght@300;400;500&family=Montserrat:wght@300;400;500;600&display=swap');
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
   }
-  a:hover {
-    color: #747bff;
+  
+  body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #fafafa;
   }
-  button {
-    background-color: #f9f9f9;
+  
+  /* Police Montserrat pour tous les inputs */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] {
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  /* Styles de App.css fusionnés */
+  #root {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .logo {
+    height: 6em;
+    padding: 1.5em;
+    will-change: filter;
+    transition: filter 300ms;
+  }
+  
+  .logo:hover {
+    filter: drop-shadow(0 0 2em #646cffaa);
+  }
+  
+  .logo.react:hover {
+    filter: drop-shadow(0 0 2em #61dafbaa);
+  }
+}
+
+@layer components {
+  /* Style de titre élégant */
+  .title-elegant {
+    font-family: 'Raleway', cursive;
+    font-weight: 400;
+    letter-spacing: 1px;
+    font-size: 25px;
+    text-decoration: none;
+    color: black;
+  } 
+  
+  /* Titres principaux */
+  .title-main {
+    font-family: 'Marcellus', serif;
+    font-weight: 500;
+    letter-spacing: 2px;
+  }
+  
+  /* Texte body */
+  .text-body {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 300;
+  }
+  
+  /* Navigation links */
+  .nav-link {
+    font-family: 'Lora', serif;
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+  }
+  
+  .nav-link:hover {
+    opacity: 0.7;
+  }
+
+  /* Styles de cartes */
+  .card {
+    padding: 2em;
+  }
+
+  .read-the-docs {
+    color: #888;
+  }
+
+  /* Formulaires d'authentification */
+  .auth-container {
+    padding: 45px 35px;
+    border: 1px solid #d1d5db;
+    background-color: #acacac02;
+  }
+
+  .auth-title {
+    margin-bottom: 50px;
+  }
+
+  .auth-input-wrapper {
+    width: 320px;
+  }
+
+  .auth-input {
+    width: 100%;
+    padding: 0 0 8px 0;
+    border: 0;
+    border-bottom: 1px solid #d1d5db;
+    background-color: transparent;
+    color: #171717;
+  }
+
+  .auth-input:focus {
+    outline: none;
+    border-bottom-color: #171717;
+  }
+
+  .auth-label {
+    padding-top: 10px;
+  }
+
+  .auth-button {
+    font-family: Arial, sans-serif;
+    padding: 10px 25px;
+    border: 1px solid #d1d5db;
+    background-color: rgba(156, 163, 175, 0.3);
+    color: #434547;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    transition: background-color 0.3s;
+  }
+
+  .auth-button:hover:not(:disabled) {
+    background-color: rgba(156, 163, 175, 0.5);
+  }
+
+  .auth-button:disabled {
+    opacity: 0.5;
+  }
+
+  .auth-submit-wrapper {
+    margin-top: 30px;
+  }
+
+  .auth-footer {
+    margin-top: 20px;
+    gap: 10px;
+  }
+
+  .auth-link {
+    text-decoration: none;
+    transition: opacity 0.3s;
+  }
+
+  .auth-link:hover {
+    opacity: 0.6;
+  }
+
+  .no-underline {
+    text-decoration: none;
+  }
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
   }
 }
