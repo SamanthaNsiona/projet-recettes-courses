@@ -1,17 +1,21 @@
-import { PrismaClient } from "@prisma/client";
+const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 // 📌 0. Créer une recette
-export const createRecipe = async (req, res) => {
+const createRecipe = async (req, res) => {
   try {
-    const { title, description, isPublic } = req.body;
+    const { title, description, isPublic, ingredients } = req.body;
     const recipe = await prisma.recipe.create({
       data: {
         title,
         description,
-        isPublic: isPublic || false,
-        userId: req.user.id // 🔒 Lien avec l'utilisateur connecté
+        isPublic: isPublic !== undefined ? isPublic : true,
+        userId: req.user.id,
+        ingredients: {
+          create: ingredients || []
+        }
       },
+      include: { ingredients: true }
     });
     res.status(201).json({ message: "Recette créée", recipe });
   } catch (error) {
@@ -19,11 +23,37 @@ export const createRecipe = async (req, res) => {
   }
 };
 
-// 📌 1. Récupérer les recettes de l'utilisateur connecté
-export const getRecipes = async (req, res) => {
+// 📌 1. Récupérer TOUTES les recettes publiques (pour la page "Recettes")
+const getPublicRecipes = async (req, res) => {
   try {
     const recipes = await prisma.recipe.findMany({
-      where: { userId: req.user.id }
+      where: { isPublic: true },
+      include: {
+        user: {
+          select: { name: true, email: true }
+        },
+        ingredients: true
+      },
+      orderBy: { id: 'desc' }
+    });
+    res.json(recipes);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// 📌 2. Récupérer les recettes de l'utilisateur connecté (pour la page "Mes Recettes")
+const getRecipes = async (req, res) => {
+  try {
+    const recipes = await prisma.recipe.findMany({
+      where: { userId: req.user.id },
+      include: {
+        user: {
+          select: { name: true, email: true }
+        },
+        ingredients: true
+      },
+      orderBy: { id: 'desc' }
     });
     res.json(recipes);
   } catch (error) {
@@ -32,7 +62,7 @@ export const getRecipes = async (req, res) => {
 };
 
 // 📌 2. Récupérer UNE recette
-export const getRecipeById = async (req, res) => {
+const getRecipeById = async (req, res) => {
   try {
     const recipe = await prisma.recipe.findUnique({
       where: { id: parseInt(req.params.id) }
@@ -47,12 +77,28 @@ export const getRecipeById = async (req, res) => {
 };
 
 // 📌 3. Modifier une recette
-export const updateRecipe = async (req, res) => {
+const updateRecipe = async (req, res) => {
   try {
-    const { title, description, isPublic } = req.body;
+    const { title, description, isPublic, ingredients } = req.body;
+    const recipeId = parseInt(req.params.id);
+
+    // Supprimer les anciens ingrédients
+    await prisma.ingredient.deleteMany({
+      where: { recipeId }
+    });
+
+    // Mettre à jour la recette avec les nouveaux ingrédients
     const recipe = await prisma.recipe.update({
-      where: { id: parseInt(req.params.id) },
-      data: { title, description, isPublic }
+      where: { id: recipeId },
+      data: {
+        title,
+        description,
+        isPublic,
+        ingredients: {
+          create: ingredients || []
+        }
+      },
+      include: { ingredients: true }
     });
     res.json({ message: "Recette mise à jour", recipe });
   } catch (error) {
@@ -61,7 +107,7 @@ export const updateRecipe = async (req, res) => {
 };
 
 // 📌 4. Supprimer une recette
-export const deleteRecipe = async (req, res) => {
+const deleteRecipe = async (req, res) => {
   try {
     const recipe = await prisma.recipe.findUnique({
       where: { id: parseInt(req.params.id) }
@@ -78,4 +124,28 @@ export const deleteRecipe = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// 📌 5. Supprimer un ingrédient
+const deleteIngredient = async (req, res) => {
+  try {
+    const ingredientId = parseInt(req.params.id);
+    
+    // Vérifier que l'ingrédient appartient à une recette de l'utilisateur
+    const ingredient = await prisma.ingredient.findUnique({
+      where: { id: ingredientId },
+      include: { recipe: true }
+    });
+
+    if (!ingredient || ingredient.recipe.userId !== req.user.id) {
+      return res.status(404).json({ message: "Ingrédient introuvable" });
+    }
+
+    await prisma.ingredient.delete({ where: { id: ingredientId } });
+    res.json({ message: "Ingrédient supprimé" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { createRecipe, getPublicRecipes, getRecipes, getRecipeById, updateRecipe, deleteRecipe, deleteIngredient };
 

@@ -1,19 +1,23 @@
-import { Router } from "express";
-import {
+const { Router } = require("express");
+const {
   createRecipe,
+  getPublicRecipes,
   getRecipes,
   getRecipeById,
   updateRecipe,
-  deleteRecipe
-} from "../controllers/recipeController.js";
-import { protect } from "../middleware/authMiddleware.js";
+  deleteRecipe,
+  deleteIngredient
+} = require("../controllers/recipeController");
+const { protect } = require("../middleware/authMiddleware");
 
 const router = Router();
 
-router.post("/", protect, createRecipe);      // 🟢 Créer une recette
-router.get("/", protect, getRecipes);         // 🔍 Voir mes recettes
-router.get("/:id", protect, getRecipeById);   // 🧪 Voir une recette
-router.put("/:id", protect, updateRecipe);    // ✏️ Modifier
-router.delete("/:id", protect, deleteRecipe); // ❌ Supprimer
+router.get("/public", protect, getPublicRecipes); //  Voir toutes les recettes publiques (DOIT ÊTRE AVANT /:id)
+router.post("/", protect, createRecipe);         //  Créer une recette
+router.get("/", protect, getRecipes);            //  Voir mes recettes
+router.get("/:id", protect, getRecipeById);      //  Voir une recette
+router.put("/:id", protect, updateRecipe);       //  Modifier
+router.delete("/:id", protect, deleteRecipe);    //  Supprimer
+router.delete("/ingredient/:id", protect, deleteIngredient); //  Supprimer un ingrédient
 
-export default router;
+module.exports = router;

@@ -4,18 +4,21 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
+  url      = "file:./dev.db"
 }
 
+
 model User {
-  id          Int            @id @default(autoincrement())
-  name        String
-  email       String         @unique
-  password    String
-  role        String         @default("USER")
-  recipes     Recipe[]
-  lists       ShoppingList[]
-  ingredients Ingredient[]
+  id                   Int            @id @default(autoincrement())
+  name                 String
+  email                String         @unique
+  password             String
+  role                 String         @default("USER")
+  resetPasswordToken   String?
+  resetPasswordExpiry  DateTime?
+  recipes              Recipe[]
+  lists                ShoppingList[]
+  ingredients          Ingredient[]
 }
 
 model Recipe {
@@ -40,8 +43,18 @@ model Ingredient {
 }
 
 model ShoppingList {
-  id     Int    @id @default(autoincrement())
+  id     Int            @id @default(autoincrement())
   title  String
-  user   User   @relation(fields: [userId], references: [id])
+  user   User           @relation(fields: [userId], references: [id])
   userId Int
+  items  ShoppingItem[]
+}
+
+model ShoppingItem {
+  id       Int           @id @default(autoincrement())
+  name     String
+  quantity Float?
+  unit     String?
+  list     ShoppingList  @relation(fields: [listId], references: [id])
+  listId   Int
 }

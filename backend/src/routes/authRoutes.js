@@ -1,9 +1,11 @@
-import { Router } from "express";
-import { register, login } from "../controllers/authController.js";
+const { Router } = require("express");
+const { register, login, forgotPassword, resetPassword } = require("../controllers/authController");
 
 const router = Router();
 
 router.post("/register", register);
 router.post("/login", login);
+router.post("/forgot-password", forgotPassword);
+router.post("/reset-password", resetPassword);
 
-export { router };
+module.exports = { router };
