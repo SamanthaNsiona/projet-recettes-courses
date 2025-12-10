@@ -1,8 +1,14 @@
 import api from './api';
 
 export const recipeService = {
-  // Récupérer toutes les recettes
-  getAll: async () => {
+  // Récupérer toutes les recettes publiques
+  getPublicRecipes: async () => {
+    const response = await api.get('/recipes/public');
+    return response.data;
+  },
+
+  // Récupérer mes recettes
+  getMyRecipes: async () => {
     const response = await api.get('/recipes');
     return response.data;
   },
@@ -28,6 +34,12 @@ export const recipeService = {
   // Supprimer une recette
   delete: async (id) => {
     const response = await api.delete(`/recipes/${id}`);
+    return response.data;
+  },
+
+  // Supprimer un ingrédient
+  deleteIngredient: async (ingredientId) => {
+    const response = await api.delete(`/recipes/ingredient/${ingredientId}`);
     return response.data;
   },
 };

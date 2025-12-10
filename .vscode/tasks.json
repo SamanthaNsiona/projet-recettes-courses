@@ -26,8 +26,20 @@
       }
     },
     {
+      "label": "Start Prisma Studio",
+      "type": "shell",
+      "command": "cd backend; npx prisma studio --schema=./prisma/schema.prisma",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "servers"
+      }
+    },
+    {
       "label": "Start All Servers",
-      "dependsOn": ["Start Backend", "Start Frontend"],
+      "dependsOn": ["Start Backend", "Start Frontend", "Start Prisma Studio"],
       "problemMatcher": []
     }
   ]

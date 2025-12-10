@@ -12,15 +12,23 @@ const courseRoutes = require("./src/routes/courseRoutes");
 
 dotenv.config();
 
-// Définir les variables d'environnement par défaut si non définies
-if (!process.env.EMAIL_USER) process.env.EMAIL_USER = "MyRecipesdev@gmail.com";
-if (!process.env.EMAIL_PASSWORD) process.env.EMAIL_PASSWORD = "zedamgjyubhlllql";
-if (!process.env.FRONTEND_URL) process.env.FRONTEND_URL = "http://localhost:5173";
-
-console.log('✅ Variables EMAIL chargées:', {
-  EMAIL_USER: process.env.EMAIL_USER,
-  EMAIL_PASSWORD: process.env.EMAIL_PASSWORD ? '***' : 'NON DEFINI'
-});
+// Définir les variables d'environnement par défaut si non définies (UNIQUEMENT EN DEVELOPPEMENT)
+if (process.env.NODE_ENV !== 'production') {
+  if (!process.env.EMAIL_USER) process.env.EMAIL_USER = "MyRecipesdev@gmail.com";
+  if (!process.env.EMAIL_PASSWORD) process.env.EMAIL_PASSWORD = "zedamgjyubhlllql";
+  if (!process.env.FRONTEND_URL) process.env.FRONTEND_URL = "http://localhost:5173";
+  
+  console.log('✅ Variables EMAIL chargées:', {
+    EMAIL_USER: process.env.EMAIL_USER,
+    EMAIL_PASSWORD: '***'
+  });
+} else {
+  // En production, vérifier que les variables sont définies
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
+    console.error('❌ ERREUR: Variables EMAIL non définies en production');
+    process.exit(1);
+  }
+}
 
 const app = express();
 

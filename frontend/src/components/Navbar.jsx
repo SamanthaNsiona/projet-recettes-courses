@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { ArrowRightOnRectangleIcon, BookOpenIcon, ShoppingCartIcon } from '@heroicons/react/24/outline';
+import { ArrowRightOnRectangleIcon, BookOpenIcon, ShoppingCartIcon, UserIcon } from '@heroicons/react/24/outline';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -15,7 +15,7 @@ export default function Navbar() {
 
   return (
     <nav className="bg-black border-b border-white/10">
-      <div className="max-w-7xl mx-auto px-6 py-6">
+      <div className="max-w-7xl mx-auto px-6 py-6 ">
         {/* Titre élégant */}
         <div className="text-center mb-16">
           <Link to="/recipes" className="title-elegant text-white text-7xl hover:opacity-80 transition-opacity">
@@ -37,6 +37,13 @@ export default function Navbar() {
               Recettes
             </Link>
             <Link
+              to="/my-recipes"
+              className="nav-link flex items-center gap-3 text-white"
+            >
+              <UserIcon className="h-4 w-4" />
+              Mes Recettes
+            </Link>
+            <Link
               to="/shopping-lists"
               className="nav-link flex items-center gap-3 text-white"
             >
@@ -46,7 +53,7 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-8">
-            <span className="text-xs text-white/70 text-body">Bonjour, {user.name}</span>
+            <span className="text-xs text-white/70 text-body">Bonjour, {user.name} </span>
             <button
               onClick={handleLogout}
               className="nav-link flex items-center gap-3 text-white"

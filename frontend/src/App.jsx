@@ -7,6 +7,7 @@ import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import Recipes from './pages/Recipes';
+import MyRecipes from './pages/MyRecipes';
 import ShoppingLists from './pages/ShoppingLists';
 
 function App() {
@@ -25,6 +26,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Recipes />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/my-recipes"
+              element={
+                <ProtectedRoute>
+                  <MyRecipes />
                 </ProtectedRoute>
               }
             />
