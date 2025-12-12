@@ -1,6 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
+const axios = require("axios");
 const { generateToken } = require("../utils/generateToken");
 const { sendPasswordResetEmail } = require("../utils/emailService");
 
@@ -8,7 +9,43 @@ const prisma = new PrismaClient();
 
 const register = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, captchaToken } = req.body;
+
+    // Validation du captcha
+    if (!captchaToken) {
+      return res.status(400).json({ message: "Veuillez compléter la vérification hCaptcha" });
+    }
+
+    // Vérifier le token hCaptcha avec l'API hCaptcha
+    const hcaptchaSecret = process.env.HCAPTCHA_SECRET_KEY;
+    console.log('🔐 Vérification hCaptcha - Token reçu:', captchaToken ? 'OUI' : 'NON');
+    console.log('🔐 Secret key configurée:', hcaptchaSecret ? 'OUI' : 'NON');
+    
+    try {
+      const params = new URLSearchParams();
+      params.append('secret', hcaptchaSecret);
+      params.append('response', captchaToken);
+      
+      console.log('📡 Envoi de la requête à hCaptcha...');
+      const hcaptchaResponse = await axios.post('https://hcaptcha.com/siteverify', params, {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+      });
+      
+      console.log('📡 Réponse hCaptcha:', hcaptchaResponse.data);
+      
+      if (!hcaptchaResponse.data.success) {
+        console.error('❌ hCaptcha verification failed:', hcaptchaResponse.data);
+        return res.status(400).json({ 
+          message: "Échec de la vérification hCaptcha",
+          details: hcaptchaResponse.data['error-codes']
+        });
+      }
+      
+      console.log('✅ hCaptcha verification successful');
+    } catch (captchaError) {
+      console.error('❌ hCaptcha verification error:', captchaError.message);
+      return res.status(500).json({ message: "Erreur lors de la vérification hCaptcha" });
+    }
 
     // Validation des entrées
     if (!name || !email || !password) {

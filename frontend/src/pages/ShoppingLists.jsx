@@ -99,85 +99,81 @@ export default function ShoppingLists() {
   };
 
   if (loading) {
-    return <div className="text-center py-16 text-xs tracking-[0.2em] uppercase text-neutral-600">Chargement...</div>;
+    return <div className="loading-text">Chargement...</div>;
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-12">
-      <h1 className="title-main text-2xl mb-16 flex items-center gap-4">
-        <ShoppingCartIcon className="h-5 w-5" />
+    <div className="page-container">
+      <h1 className="page-title-icon">
+        <ShoppingCartIcon className="page-icon" />
         MES LISTES DE COURSES
       </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+      <div className="grid-shopping">
         {/* Liste des listes */}
-        <div className="border-b border-neutral-200 pb-8">
-          <h2 className="text-xs font-light tracking-[0.2em] uppercase mb-8 text-neutral-600">Mes listes</h2>
+        <div className="section-divider">
+          <h2 className="form-title">Mes listes</h2>
           
           <form onSubmit={createList} className="mb-8">
-            <div className="flex gap-4">
+            <div className="flex-gap-4">
               <input
                 type="text"
                 value={newListTitle}
                 onChange={(e) => setNewListTitle(e.target.value)}
                 placeholder="Nouvelle liste..."
-                className="flex-1 px-0 py-3 border-0 border-b border-neutral-300 bg-transparent focus:border-neutral-900 focus:outline-none text-sm transition-colors"
+                className="flex-1 form-input"
               />
-              <button
-                type="submit"
-                className="bg-neutral-900 text-white px-6 py-3 hover:bg-neutral-800 transition-colors text-xs tracking-[0.2em] uppercase"
-              >
-                <PlusIcon className="h-4 w-4" />
+              <button type="submit" className="btn-add">
+                <PlusIcon className="icon" />
               </button>
             </div>
           </form>
 
-          <div className="space-y-4">
+          <div className="space-y-2">
             {lists.map((list) => (
               <div
                 key={list.id}
-                className={`flex justify-between items-center py-3 cursor-pointer border-b transition-colors ${
-                  selectedList?.id === list.id
-                    ? 'border-neutral-900'
-                    : 'border-neutral-200 hover:border-neutral-600'
+                className={`shopping-list-item ${
+                  selectedList?.id === list.id ? 'shopping-list-item-selected' : ''
                 }`}
                 onClick={() => selectList(list)}
               >
-                <span className="font-light text-sm tracking-wide">{list.title}</span>
+                <span className="list-title-text">{list.title}</span>
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     deleteList(list.id);
                   }}
-                  className="text-neutral-600 hover:text-neutral-900 transition-colors"
+                  className="btn-delete"
+                  title="Supprimer cette liste"
                 >
-                  <TrashIcon className="h-4 w-4" />
+                  ✕
                 </button>
               </div>
             ))}
           </div>
 
           {lists.length === 0 && (
-            <p className="text-center text-neutral-400 mt-8 text-xs tracking-wider uppercase">
+            <p className="message-empty">
               Aucune liste. Créez-en une !
             </p>
           )}
         </div>
 
         {/* Items de la liste sélectionnée */}
-        <div className="md:col-span-2 border-b border-neutral-200 pb-8">
+        <div className="section-divider">
           {selectedList ? (
             <>
-              <h2 className="text-xs font-light tracking-[0.2em] uppercase mb-8 text-neutral-600">{selectedList.title}</h2>
+              <h2 className="form-title">{selectedList.title}</h2>
 
               <form onSubmit={addItem} className="mb-8">
-                <div className="grid grid-cols-12 gap-4">
+                <div className="grid-form">
                   <input
                     type="text"
                     value={newItem.name}
                     onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
                     placeholder="Article..."
-                    className="col-span-6 px-0 py-3 border-0 border-b border-neutral-300 bg-transparent focus:border-neutral-900 focus:outline-none text-sm transition-colors"
+                    className="col-span-6 form-input"
                     required
                   />
                   <input
@@ -186,42 +182,37 @@ export default function ShoppingLists() {
                     value={newItem.quantity}
                     onChange={(e) => setNewItem({ ...newItem, quantity: e.target.value })}
                     placeholder="Qté"
-                    className="col-span-2 px-0 py-3 border-0 border-b border-neutral-300 bg-transparent focus:border-neutral-900 focus:outline-none text-sm transition-colors"
+                    className="col-span-2 form-input"
                   />
                   <input
                     type="text"
                     value={newItem.unit}
                     onChange={(e) => setNewItem({ ...newItem, unit: e.target.value })}
                     placeholder="Unité"
-                    className="col-span-2 px-0 py-3 border-0 border-b border-neutral-300 bg-transparent focus:border-neutral-900 focus:outline-none text-sm transition-colors"
+                    className="col-span-2 form-input"
                   />
-                  <button
-                    type="submit"
-                    className="col-span-2 bg-neutral-900 text-white py-3 hover:bg-neutral-800 transition-colors text-xs tracking-[0.2em] uppercase"
-                  >
-                    <PlusIcon className="h-4 w-4 mx-auto" />
+                  <button type="submit" className="col-span-2 btn-add">
+                    <PlusIcon className="icon mx-auto" />
                   </button>
                 </div>
               </form>
 
-              <div className="space-y-4">
+              <div className="space-y-2">
                 {items.map((item) => (
-                  <div
-                    key={item.id}
-                    className="flex justify-between items-center py-3 border-b border-neutral-200"
-                  >
-                    <span className="font-light text-sm tracking-wide">{item.name}</span>
-                    <div className="flex items-center gap-6">
+                  <div key={item.id} className="shopping-item">
+                    <span className="shopping-item-name">{item.name}</span>
+                    <div className="shopping-item-details">
                       {item.quantity && (
-                        <span className="text-neutral-600 text-xs tracking-wider">
+                        <span className="shopping-item-quantity">
                           {item.quantity} {item.unit}
                         </span>
                       )}
                       <button
                         onClick={() => deleteItem(item.id)}
-                        className="text-neutral-600 hover:text-neutral-900 transition-colors"
+                        className="btn-delete"
+                        title="Supprimer cet article"
                       >
-                        <TrashIcon className="h-4 w-4" />
+                        ✕
                       </button>
                     </div>
                   </div>
@@ -229,13 +220,13 @@ export default function ShoppingLists() {
               </div>
 
               {items.length === 0 && (
-                <p className="text-center text-neutral-400 mt-8 text-xs tracking-wider uppercase">
+                <p className="message-empty">
                   Cette liste est vide. Ajoutez des articles !
                 </p>
               )}
             </>
           ) : (
-            <div className="text-center text-neutral-400 py-16 text-xs tracking-[0.2em] uppercase">
+            <div className="loading-text">
               Sélectionnez une liste pour voir ses articles
             </div>
           )}
