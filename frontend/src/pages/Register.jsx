@@ -37,6 +37,7 @@ export default function Register() {
         name: formData.name,
         email: formData.email,
         password: formData.password,
+        captchaToken: captchaToken,
       });
       navigate('/recipes');
     } catch (err) {
