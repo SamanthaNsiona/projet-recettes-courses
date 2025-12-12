@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { recipeService } from '../services/recipeService';
-import { PlusIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, PencilIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 export default function MyRecipes() {
   const [recipes, setRecipes] = useState([]);
@@ -183,27 +183,27 @@ export default function MyRecipes() {
               {formData.ingredients.length > 0 && (
                 <div className="mb-4 space-y-2">
                   {formData.ingredients.map((ing, index) => (
-                    <div key={index} className="flex items-center justify-between bg-gray-100 px-3 py-2 rounded">
-                      <span className="text-xs">
+                    <div key={index} className="flex items-center gap-3 text-xs bg-neutral-50 px-3 py-2 border border-neutral-200">
+                      <span className="flex-1">
                         {ing.quantity && `${ing.quantity}g `}
                         {ing.name}
                       </span>
-                      <div className="flex gap-2">
-                        <button
-                          type="button"
-                          onClick={() => handleEditIngredient(index)}
-                          className="bg-blue-500 text-white px-3 py-1 text-xs rounded hover:bg-blue-600"
-                        >
-                          ✏️ Modifier
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveIngredient(index)}
-                          className="bg-red-500 text-white px-3 py-1 text-xs rounded hover:bg-red-600"
-                        >
-                          ✕ Supprimer
-                        </button>
-                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleEditIngredient(index)}
+                        className="text-neutral-600 hover:text-neutral-900 px-2"
+                        title="Modifier"
+                      >
+                        <PencilIcon className="h-4 w-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveIngredient(index)}
+                        className="text-red-400 hover:text-red-600 px-2"
+                        title="Supprimer"
+                      >
+                        <TrashIcon className="h-4 w-4" />
+                      </button>
                     </div>
                   ))}
                 </div>
@@ -278,22 +278,23 @@ export default function MyRecipes() {
             {recipe.ingredients && recipe.ingredients.length > 0 && (
               <div className="mb-6">
                 <h4 className="text-xs font-medium tracking-wide mb-2 text-neutral-700">INGRÉDIENTS</h4>
-                <div className="space-y-2">
+                <ul className="text-xs text-neutral-600 space-y-2">
                   {recipe.ingredients.map((ingredient) => (
-                    <div key={ingredient.id} className="flex items-center justify-between bg-gray-100 px-3 py-2 rounded">
-                      <span className="text-xs text-neutral-600">
+                    <li key={ingredient.id} className="flex items-center justify-between bg-neutral-50 px-2 py-1">
+                      <span>
                         {ingredient.quantity && `${ingredient.quantity}g `}
                         {ingredient.name}
                       </span>
                       <button
                         onClick={() => handleDeleteIngredient(ingredient.id)}
-                        className="bg-red-500 text-white px-3 py-1 text-xs rounded hover:bg-red-600"
+                        className="text-red-500 hover:text-red-700 ml-2 p-1"
+                        title="Supprimer"
                       >
-                        ✕ Supprimer
+                        <XMarkIcon className="h-4 w-4" />
                       </button>
-                    </div>
+                    </li>
                   ))}
-                </div>
+                </ul>
               </div>
             )}
             

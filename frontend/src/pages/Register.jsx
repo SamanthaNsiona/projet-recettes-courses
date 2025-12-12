@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import HCaptchaComponent from '../components/HCaptchaComponent';
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -11,6 +12,7 @@ export default function Register() {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState(null);
   const { register } = useAuth();
   const navigate = useNavigate();
 
@@ -20,6 +22,11 @@ export default function Register() {
 
     if (formData.password !== formData.confirmPassword) {
       setError('Les mots de passe ne correspondent pas');
+      return;
+    }
+
+    if (!captchaToken) {
+      setError('Veuillez compléter la vérification hCaptcha');
       return;
     }
 
@@ -107,11 +114,18 @@ export default function Register() {
             />
           </div>
 
+          <div className="auth-captcha-wrapper">
+            <HCaptchaComponent 
+              onVerify={setCaptchaToken}
+              onError={() => setCaptchaToken(null)}
+            />
+          </div>
+
           <div className="flex justify-center auth-submit-wrapper">
             <button
               type="submit"
-              disabled={loading}
-              className="auth-button"
+              disabled={loading || !captchaToken}
+              className="auth-button disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Inscription...' : 'S\'inscrire'}
             </button>

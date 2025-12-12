@@ -18,7 +18,16 @@ export default function Login() {
       await login(formData);
       navigate('/recipes');
     } catch (err) {
-      setError(err.response?.data?.message || 'Erreur lors de la connexion');
+      console.log('Erreur complète:', err);
+      console.log('Réponse:', err.response);
+      
+      // Gérer le rate limiting (statut 429)
+      if (err.response?.status === 429) {
+        setError(err.response?.data?.error || 'Trop de tentatives. Veuillez réessayer plus tard.');
+      } else {
+        const errorMessage = err.response?.data?.message || 'Email ou mot de passe incorrect';
+        setError(errorMessage);
+      }
     } finally {
       setLoading(false);
     }
@@ -68,7 +77,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="auth-button"
+              className="auth-button disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Connexion...' : 'Se connecter'}
             </button>

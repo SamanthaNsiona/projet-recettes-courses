@@ -27,9 +27,14 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      window.location.href = '/login';
+      // Ne rediriger que si l'utilisateur était déjà connecté (token expiré)
+      // Pas pour les erreurs de connexion/inscription
+      const wasAuthenticated = localStorage.getItem('token');
+      if (wasAuthenticated && !error.config.url.includes('/auth/login') && !error.config.url.includes('/auth/register')) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/login';
+      }
     }
     return Promise.reject(error);
   }
