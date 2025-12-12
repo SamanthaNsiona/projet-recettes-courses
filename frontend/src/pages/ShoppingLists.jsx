@@ -99,85 +99,85 @@ export default function ShoppingLists() {
   };
 
   if (loading) {
-    return <div className="text-center p-8">Chargement...</div>;
+    return <div className="text-center py-16 text-xs tracking-[0.2em] uppercase text-neutral-600">Chargement...</div>;
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6 flex items-center gap-2">
-        <ShoppingCartIcon className="h-8 w-8" />
-        Mes Listes de Courses
+    <div className="max-w-7xl mx-auto px-6 py-12">
+      <h1 className="title-main text-2xl mb-16 flex items-center gap-4">
+        <ShoppingCartIcon className="h-5 w-5" />
+        MES LISTES DE COURSES
       </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
         {/* Liste des listes */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-4">Mes listes</h2>
+        <div className="border-b border-neutral-200 pb-8">
+          <h2 className="text-xs font-light tracking-[0.2em] uppercase mb-8 text-neutral-600">Mes listes</h2>
           
-          <form onSubmit={createList} className="mb-4">
-            <div className="flex gap-2">
+          <form onSubmit={createList} className="mb-8">
+            <div className="flex gap-4">
               <input
                 type="text"
                 value={newListTitle}
                 onChange={(e) => setNewListTitle(e.target.value)}
                 placeholder="Nouvelle liste..."
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="flex-1 px-0 py-3 border-0 border-b border-neutral-300 bg-transparent focus:border-neutral-900 focus:outline-none text-sm transition-colors"
               />
               <button
                 type="submit"
-                className="bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700"
+                className="bg-neutral-900 text-white px-6 py-3 hover:bg-neutral-800 transition-colors text-xs tracking-[0.2em] uppercase"
               >
-                <PlusIcon className="h-5 w-5" />
+                <PlusIcon className="h-4 w-4" />
               </button>
             </div>
           </form>
 
-          <div className="space-y-2">
+          <div className="space-y-4">
             {lists.map((list) => (
               <div
                 key={list.id}
-                className={`flex justify-between items-center p-3 rounded-lg cursor-pointer ${
+                className={`flex justify-between items-center py-3 cursor-pointer border-b transition-colors ${
                   selectedList?.id === list.id
-                    ? 'bg-blue-100 border-2 border-blue-500'
-                    : 'bg-gray-50 hover:bg-gray-100'
+                    ? 'border-neutral-900'
+                    : 'border-neutral-200 hover:border-neutral-600'
                 }`}
                 onClick={() => selectList(list)}
               >
-                <span className="font-medium">{list.title}</span>
+                <span className="font-light text-sm tracking-wide">{list.title}</span>
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     deleteList(list.id);
                   }}
-                  className="text-red-600 hover:bg-red-50 p-1 rounded"
+                  className="text-neutral-600 hover:text-neutral-900 transition-colors"
                 >
-                  <TrashIcon className="h-5 w-5" />
+                  <TrashIcon className="h-4 w-4" />
                 </button>
               </div>
             ))}
           </div>
 
           {lists.length === 0 && (
-            <p className="text-center text-gray-500 mt-4">
+            <p className="text-center text-neutral-400 mt-8 text-xs tracking-wider uppercase">
               Aucune liste. Créez-en une !
             </p>
           )}
         </div>
 
         {/* Items de la liste sélectionnée */}
-        <div className="md:col-span-2 bg-white p-6 rounded-lg shadow-md">
+        <div className="md:col-span-2 border-b border-neutral-200 pb-8">
           {selectedList ? (
             <>
-              <h2 className="text-xl font-semibold mb-4">{selectedList.title}</h2>
+              <h2 className="text-xs font-light tracking-[0.2em] uppercase mb-8 text-neutral-600">{selectedList.title}</h2>
 
-              <form onSubmit={addItem} className="mb-4">
-                <div className="grid grid-cols-12 gap-2">
+              <form onSubmit={addItem} className="mb-8">
+                <div className="grid grid-cols-12 gap-4">
                   <input
                     type="text"
                     value={newItem.name}
                     onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
                     placeholder="Article..."
-                    className="col-span-6 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="col-span-6 px-0 py-3 border-0 border-b border-neutral-300 bg-transparent focus:border-neutral-900 focus:outline-none text-sm transition-colors"
                     required
                   />
                   <input
@@ -186,42 +186,42 @@ export default function ShoppingLists() {
                     value={newItem.quantity}
                     onChange={(e) => setNewItem({ ...newItem, quantity: e.target.value })}
                     placeholder="Qté"
-                    className="col-span-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="col-span-2 px-0 py-3 border-0 border-b border-neutral-300 bg-transparent focus:border-neutral-900 focus:outline-none text-sm transition-colors"
                   />
                   <input
                     type="text"
                     value={newItem.unit}
                     onChange={(e) => setNewItem({ ...newItem, unit: e.target.value })}
                     placeholder="Unité"
-                    className="col-span-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="col-span-2 px-0 py-3 border-0 border-b border-neutral-300 bg-transparent focus:border-neutral-900 focus:outline-none text-sm transition-colors"
                   />
                   <button
                     type="submit"
-                    className="col-span-2 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
+                    className="col-span-2 bg-neutral-900 text-white py-3 hover:bg-neutral-800 transition-colors text-xs tracking-[0.2em] uppercase"
                   >
-                    <PlusIcon className="h-5 w-5 mx-auto" />
+                    <PlusIcon className="h-4 w-4 mx-auto" />
                   </button>
                 </div>
               </form>
 
-              <div className="space-y-2">
+              <div className="space-y-4">
                 {items.map((item) => (
                   <div
                     key={item.id}
-                    className="flex justify-between items-center p-3 bg-gray-50 rounded-lg"
+                    className="flex justify-between items-center py-3 border-b border-neutral-200"
                   >
-                    <span className="font-medium">{item.name}</span>
-                    <div className="flex items-center gap-4">
+                    <span className="font-light text-sm tracking-wide">{item.name}</span>
+                    <div className="flex items-center gap-6">
                       {item.quantity && (
-                        <span className="text-gray-600">
+                        <span className="text-neutral-600 text-xs tracking-wider">
                           {item.quantity} {item.unit}
                         </span>
                       )}
                       <button
                         onClick={() => deleteItem(item.id)}
-                        className="text-red-600 hover:bg-red-50 p-1 rounded"
+                        className="text-neutral-600 hover:text-neutral-900 transition-colors"
                       >
-                        <TrashIcon className="h-5 w-5" />
+                        <TrashIcon className="h-4 w-4" />
                       </button>
                     </div>
                   </div>
@@ -229,13 +229,13 @@ export default function ShoppingLists() {
               </div>
 
               {items.length === 0 && (
-                <p className="text-center text-gray-500 mt-4">
+                <p className="text-center text-neutral-400 mt-8 text-xs tracking-wider uppercase">
                   Cette liste est vide. Ajoutez des articles !
                 </p>
               )}
             </>
           ) : (
-            <div className="text-center text-gray-500 py-12">
+            <div className="text-center text-neutral-400 py-16 text-xs tracking-[0.2em] uppercase">
               Sélectionnez une liste pour voir ses articles
             </div>
           )}

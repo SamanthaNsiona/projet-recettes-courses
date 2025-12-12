@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import HCaptchaComponent from '../components/HCaptchaComponent';
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -11,6 +12,7 @@ export default function Register() {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState(null);
   const { register } = useAuth();
   const navigate = useNavigate();
 
@@ -20,6 +22,11 @@ export default function Register() {
 
     if (formData.password !== formData.confirmPassword) {
       setError('Les mots de passe ne correspondent pas');
+      return;
+    }
+
+    if (!captchaToken) {
+      setError('Veuillez compléter la vérification hCaptcha');
       return;
     }
 
@@ -40,83 +47,94 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8">
-        <h2 className="text-3xl font-bold text-center mb-6">Inscription</h2>
+    <div className="min-h-screen flex items-center justify-center bg-neutral-50 px-6">
+      <div className="max-w-md flex flex-col auth-container">
+        <h2 className="title-main text-2xl text-center text-neutral-800 auth-title">
+          INSCRIPTION
+        </h2>
         
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          <div className="border-l-2 border-neutral-900 bg-neutral-100 px-6 py-4 mb-8 text-sm text-neutral-700">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-gray-700 font-medium mb-2">
+        <form onSubmit={handleSubmit} className="space-y-8 flex flex-col items-center">
+          <div className="auth-input-wrapper">
+            <label className="block text-body text-xs uppercase text-neutral-600 mb-3">
               Nom
             </label>
             <input
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="auth-input transition-colors"
               required
             />
           </div>
 
-          <div>
-            <label className="block text-gray-700 font-medium mb-2">
+          <div className="auth-input-wrapper">
+            <label className="block text-body text-xs uppercase text-neutral-600 mb-3 auth-label">
               Email
             </label>
             <input
               type="email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="auth-input transition-colors"
               required
             />
           </div>
 
-          <div>
-            <label className="block text-gray-700 font-medium mb-2">
+          <div className="auth-input-wrapper">
+            <label className="block text-body text-xs uppercase text-neutral-600 mb-3 auth-label">
               Mot de passe
             </label>
             <input
               type="password"
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="auth-input transition-colors"
               required
               minLength={6}
             />
           </div>
 
-          <div>
-            <label className="block text-gray-700 font-medium mb-2">
+          <div className="auth-input-wrapper">
+            <label className="block text-body text-xs uppercase text-neutral-600 mb-3 auth-label">
               Confirmer le mot de passe
             </label>
             <input
               type="password"
               value={formData.confirmPassword}
               onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="auth-input transition-colors"
               required
               minLength={6}
             />
           </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 font-medium"
-          >
-            {loading ? 'Inscription...' : 'S\'inscrire'}
-          </button>
+          <div className="auth-captcha-wrapper">
+            <HCaptchaComponent 
+              onVerify={setCaptchaToken}
+              onError={() => setCaptchaToken(null)}
+            />
+          </div>
+
+          <div className="flex justify-center auth-submit-wrapper">
+            <button
+              type="submit"
+              disabled={loading || !captchaToken}
+              className="auth-button disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? 'Inscription...' : 'S\'inscrire'}
+            </button>
+          </div>
         </form>
 
-        <p className="text-center mt-4 text-gray-600">
-          Déjà un compte?{' '}
-          <Link to="/login" className="text-blue-600 hover:underline">
+        <p className="text-center mt-12 text-xs tracking-wider text-neutral-500 uppercase flex justify-center auth-footer">
+          <span>Déjà un compte?</span>
+          <Link to="/login" className="text-neutral-900 auth-link">
             Se connecter
           </Link>
         </p>
