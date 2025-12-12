@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 const { router: authRoutes } = require("./src/routes/authRoutes");
 const recipeRoutes = require("./src/routes/recipeRoutes");
 const { protect } = require("./src/middleware/authMiddleware");
+const { apiLimiter } = require("./src/middleware/rateLimiter");
 
 const shoppingListRoutes = require("./src/routes/shoppingListRoutes");
 const shoppingItemRoutes = require("./src/routes/shoppingItemRoutes");
@@ -12,28 +13,25 @@ const courseRoutes = require("./src/routes/courseRoutes");
 
 dotenv.config();
 
-// Définir les variables d'environnement par défaut si non définies (UNIQUEMENT EN DEVELOPPEMENT)
-if (process.env.NODE_ENV !== 'production') {
-  if (!process.env.EMAIL_USER) process.env.EMAIL_USER = "MyRecipesdev@gmail.com";
-  if (!process.env.EMAIL_PASSWORD) process.env.EMAIL_PASSWORD = "zedamgjyubhlllql";
-  if (!process.env.FRONTEND_URL) process.env.FRONTEND_URL = "http://localhost:5173";
-  
-  console.log('✅ Variables EMAIL chargées:', {
-    EMAIL_USER: process.env.EMAIL_USER,
-    EMAIL_PASSWORD: '***'
-  });
-} else {
-  // En production, vérifier que les variables sont définies
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
-    console.error('❌ ERREUR: Variables EMAIL non définies en production');
-    process.exit(1);
-  }
+// Vérifier que les variables d'environnement email sont définies
+if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
+  console.error('❌ ERREUR: Variables EMAIL_USER et EMAIL_PASSWORD doivent être définies dans le fichier .env');
+  console.error('Consultez le fichier .env.example pour voir un exemple de configuration');
+  process.exit(1);
 }
+
+console.log('✅ Variables EMAIL chargées:', {
+  EMAIL_USER: process.env.EMAIL_USER,
+  EMAIL_PASSWORD: '***'
+});
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+// Appliquer le rate limiter global sur toutes les routes API
+app.use('/api/', apiLimiter);
 
 // Test route
 app.get('/', (req, res) => {
