@@ -1,53 +1,49 @@
 @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Marcellus&family=Lora:wght@400;500&family=Poppins:wght@300;400;500&family=Montserrat:wght@300;400;500;600&display=swap');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer base {
-  * {
-    margin: 0;
-    padding: 0;
-  }
-  
-  body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #fafafa;
-  }
-  
-  /* Police Montserrat pour tous les inputs */
-  input[type="text"],
-  input[type="email"],
-  input[type="password"] {
-    font-family: 'Montserrat', sans-serif;
-  }
-
-  /* Styles de App.css fusionnés */
-  #root {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 2rem;
-    text-align: center;
-  }
-
-  .logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-    transition: filter 300ms;
-  }
-  
-  .logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
-  }
-  
-  .logo.react:hover {
-    filter: drop-shadow(0 0 2em #61dafbaa);
-  }
+/* ========== RESET ET BASE ========== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-@layer components {
-  /* Style de titre élégant */
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #fafafa;
+  min-height: 100vh;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+textarea {
+  font-family: 'Montserrat', sans-serif;
+}
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+/* ========== TYPOGRAPHIE ========== */
   .title-elegant {
     font-family: 'Raleway', cursive;
     font-weight: 400;
@@ -144,6 +140,14 @@
 
   .auth-submit-wrapper {
     margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .auth-captcha-wrapper {
+    margin-top: 30px;
   }
 
   .auth-footer {
@@ -163,8 +167,820 @@
   .no-underline {
     text-decoration: none;
   }
+
+  /* ========== CONTENEURS DE PAGE ========== */
+  .page-container {
+    max-width: 112rem;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+  }
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4rem;
+  }
+
+  /* ========== BOUTONS ========== */
+  .btn-primary {
+    background-color: #171717;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    transition: background-color 0.3s;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-primary:hover {
+    background-color: #404040;
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .btn-secondary {
+    background-color: #e5e5e5;
+    color: #171717;
+    padding: 0.75rem 1.5rem;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    transition: background-color 0.3s;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-secondary:hover {
+    background-color: #d4d4d4;
+  }
+
+  .btn-delete {
+    background-color: #ef4444;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .btn-delete:hover {
+    background-color: #dc2626;
+  }
+
+  .btn-edit {
+    background-color: #3b82f6;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .btn-edit:hover {
+    background-color: #2563eb;
+  }
+
+  .btn-icon {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .btn-outline {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid #171717;
+    color: #171717;
+    background-color: transparent;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+
+  .btn-outline:hover {
+    background-color: #171717;
+    color: white;
+  }
+
+  .btn-add {
+    background-color: #171717;
+    color: white;
+    padding: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-add:hover {
+    background-color: #404040;
+  }
+
+  /* ========== FORMULAIRES ========== */
+  .form-container {
+    border-bottom: 1px solid #e5e5e5;
+    padding-bottom: 3rem;
+    margin-bottom: 3rem;
+  }
+
+  .form-title {
+    font-size: 0.75rem;
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    color: #737373;
+  }
+
+  .form-group {
+    margin-bottom: 2rem;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #737373;
+    margin-bottom: 0.75rem;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 0.75rem 0;
+    border: 0;
+    border-bottom: 1px solid #d4d4d4;
+    background-color: transparent;
+    font-size: 0.875rem;
+    transition: border-color 0.3s;
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-bottom-color: #171717;
+  }
+
+  .form-input-bordered {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d4d4d4;
+    font-size: 0.75rem;
+  }
+
+  .form-input-bordered:focus {
+    outline: none;
+    border-color: #171717;
+  }
+
+  .form-textarea {
+    width: 100%;
+    padding: 0.75rem 0;
+    border: 0;
+    border-bottom: 1px solid #d4d4d4;
+    background-color: transparent;
+    font-size: 0.875rem;
+    resize: none;
+    transition: border-color 0.3s;
+  }
+
+  .form-textarea:focus {
+    outline: none;
+    border-bottom-color: #171717;
+  }
+
+  .form-checkbox {
+    width: 1rem;
+    height: 1rem;
+    border: 1px solid #d4d4d4;
+  }
+
+  .form-checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 1rem;
+    padding-top: 1rem;
+  }
+
+  /* ========== GRILLES ========== */
+  .grid-recipes {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .grid-shopping {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  @media (min-width: 768px) {
+    .grid-shopping {
+      grid-template-columns: 1fr 2fr;
+    }
+  }
+
+  .grid-form {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 0.75rem;
+  }
+
+  .col-span-1 { grid-column: span 1; }
+  .col-span-2 { grid-column: span 2; }
+  .col-span-6 { grid-column: span 6; }
+  .col-span-9 { grid-column: span 9; }
+  .col-span-12 { grid-column: span 12; }
+
+  /* ========== CARTES ========== */
+  .recipe-card {
+    border-bottom: 1px solid #e5e5e5;
+    padding-bottom: 1.5rem;
+  }
+
+  .recipe-title {
+    font-size: 0.875rem;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+  }
+
+  .recipe-description {
+    color: #737373;
+    font-size: 0.75rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  .recipe-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .recipe-actions {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .recipe-status {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .recipe-status-public {
+    color: #171717;
+  }
+
+  .recipe-status-private {
+    color: #a3a3a3;
+  }
+
+  /* ========== INGRÉDIENTS ========== */
+  .ingredients-section {
+    margin-bottom: 1.5rem;
+  }
+
+  .ingredients-title {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+    color: #404040;
+  }
+
+  .ingredients-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .ingredient-item {
+    display: flex;
+    align-items: center;
+    background-color: #fafafa;
+    padding: 0.5rem;
+    border: 1px solid #e5e5e5;
+    font-size: 0.75rem;
+    color: #737373;
+  }
+
+  .ingredient-item-edit {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    background-color: #fafafa;
+    padding: 0.75rem;
+    border: 1px solid #e5e5e5;
+    font-size: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .ingredient-text {
+    flex: 1;
+  }
+
+  /* ========== LISTES DE COURSES ========== */
+  .shopping-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem;
+    background-color: #fafafa;
+    border: 1px solid #e5e5e5;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .shopping-list-item:hover {
+    border-color: #737373;
+  }
+
+  .shopping-list-item-selected {
+    border-color: #171717;
+    background-color: #f5f5f5;
+  }
+
+  .shopping-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem;
+    background-color: #fafafa;
+    border: 1px solid #e5e5e5;
+    margin-bottom: 0.5rem;
+  }
+
+  .shopping-item-name {
+    font-weight: 300;
+    font-size: 0.875rem;
+    letter-spacing: 0.05em;
+  }
+
+  .shopping-item-details {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .shopping-item-quantity {
+    color: #737373;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+  }
+
+  /* ========== MESSAGES ========== */
+  .message-empty {
+    text-align: center;
+    color: #a3a3a3;
+    margin-top: 3rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .message-error {
+    border-left: 2px solid #171717;
+    background-color: #f5f5f5;
+    padding: 1rem 3rem;
+    margin-bottom: 2rem;
+    font-size: 0.875rem;
+    color: #404040;
+  }
+
+  .loading-text {
+    text-align: center;
+    padding: 4rem 0;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #737373;
+  }
+
+  /* ========== UTILITAIRES ========== */
+  .section-divider {
+    border-bottom: 1px solid #e5e5e5;
+    padding-bottom: 2rem;
+  }
+
+  .space-y-2 > * + * {
+    margin-top: 0.5rem;
+  }
+
+  .space-y-4 > * + * {
+    margin-top: 1rem;
+  }
+
+  .space-y-8 > * + * {
+    margin-top: 2rem;
+  }
+
+  .flex-center {
+    display: flex;
+    justify-content: center;
+  }
+
+  .flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .flex-gap-2 {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .flex-gap-4 {
+    display: flex;
+    gap: 1rem;
+  }
+
+/* ========== NAVBAR ========== */
+.navbar {
+  background-color: #ffffff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
+.navbar-container {
+  max-width: 112rem;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.navbar-title {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.navbar-logo {
+  font-family: 'Raleway', cursive;
+  font-weight: 400;
+  letter-spacing: 1px;
+  font-size: 4.5rem;
+  text-decoration: none;
+  color: #000000;
+  transition: opacity 0.3s ease;
+}
+
+.navbar-logo:hover {
+  opacity: 0.7;
+}
+
+.navbar-divider {
+  width: 100%;
+  height: 1px;
+  background-color: #000000;
+  margin-bottom: 1.25rem;
+}
+
+.navbar-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 3rem;
+}
+
+.navbar-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #000000;
+  font-family: 'Lora', serif;
+  text-decoration: none;
+  transition: opacity 0.3s ease;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.navbar-link:hover {
+  opacity: 0.6;
+}
+
+.navbar-icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.navbar-user {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.navbar-username {
+  font-size: 0.75rem;
+  color: rgba(0, 0, 0, 0.6);
+  font-family: 'Poppins', sans-serif;
+}
+
+.navbar-logout {
+  font-family: 'Lora', serif;
+}
+
+/* ========== MESSAGES DE SUCCÈS ========== */
+.message-success {
+  border-left: 2px solid #16a34a;
+  background-color: #f0fdf4;
+  padding: 1rem 1.5rem;
+  margin-bottom: 2rem;
+  font-size: 0.875rem;
+  color: #15803d;
+}
+
+/* ========== CAPTCHA ========== */
+.captcha-container {
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+/* ========== CLASSES UTILITAIRES ========== */
+.text-center {
+  text-align: center;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.gap-4 {
+  gap: 1rem;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.mb-8 {
+  margin-bottom: 2rem;
+}
+
+.mb-16 {
+  margin-bottom: 4rem;
+}
+
+.mt-12 {
+  margin-top: 3rem;
+}
+
+.min-h-screen {
+  min-height: 100vh;
+}
+
+.max-w-md {
+  max-width: 28rem;
+}
+
+.px-6 {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.bg-neutral-50 {
+  background-color: #fafafa;
+}
+
+.text-2xl {
+  font-size: 1.5rem;
+}
+
+.text-xs {
+  font-size: 0.75rem;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+}
+
+.text-neutral-800 {
+  color: #262626;
+}
+
+.text-neutral-900 {
+  color: #171717;
+}
+
+.text-neutral-500 {
+  color: #737373;
+}
+
+.text-neutral-600 {
+  color: #525252;
+}
+
+.text-neutral-700 {
+  color: #404040;
+}
+
+.text-neutral-400 {
+  color: #a3a3a3;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+.tracking-wider {
+  letter-spacing: 0.05em;
+}
+
+.tracking-wide {
+  letter-spacing: 0.025em;
+}
+
+.font-light {
+  font-weight: 300;
+}
+
+.space-y-8 > * + * {
+  margin-top: 2rem;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+/* ========== CLASSES SUPPLÉMENTAIRES POUR LES PAGES ========== */
+.page-title {
+  font-family: 'Marcellus', serif;
+  font-weight: 500;
+  letter-spacing: 2px;
+  font-size: 1.5rem;
+}
+
+.page-title-icon {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-family: 'Marcellus', serif;
+  font-weight: 500;
+  letter-spacing: 2px;
+  font-size: 1.5rem;
+  margin-bottom: 4rem;
+}
+
+.page-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.recipe-author {
+  font-size: 0.75rem;
+  color: #a3a3a3;
+  margin-bottom: 1rem;
+}
+
+.list-title-text {
+  font-weight: 300;
+  font-size: 0.875rem;
+  letter-spacing: 0.025em;
+}
+
+.auth-footer-text {
+  text-align: center;
+  margin-top: 3rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  color: #737373;
+  text-transform: uppercase;
+  display: flex;
+  justify-content: center;
+  gap: 0.125rem;
+}
+
+.auth-forgot-link {
+  font-size: 0.75rem;
+  color: #525252;
+  text-decoration: none;
+  transition: color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.auth-forgot-link:hover {
+  color: #171717;
+}
+
+.auth-error-text {
+  text-align: center;
+  color: #404040;
+}
+
+/* ========== ICÔNES ========== */
+.icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.icon-sm {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.icon-lg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mr-1 {
+  margin-right: 0.25rem;
+}
+
+.w-5 {
+  width: 1.25rem;
+}
+
+.h-5 {
+  height: 1.25rem;
+}
+
+/* ========== LAYOUTS ET CONTAINERS ========== */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fafafa;
+  padding: 0 1.5rem;
+}
+
+.auth-box {
+  max-width: 28rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.app-container {
+  min-height: 100vh;
+  background-color: #fafafa;
+}
+
+/* ========== ANIMATIONS ========== */
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);

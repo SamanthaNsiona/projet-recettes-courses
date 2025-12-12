@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { recipeService } from '../services/recipeService';
-import { PlusIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, PencilIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 export default function MyRecipes() {
   const [recipes, setRecipes] = useState([]);
@@ -17,6 +17,7 @@ export default function MyRecipes() {
     name: '',
     quantity: ''
   });
+  const [editingIngredientIndex, setEditingIngredientIndex] = useState(null);
 
   useEffect(() => {
     loadRecipes();
@@ -74,19 +75,28 @@ export default function MyRecipes() {
 
   const handleAddIngredient = () => {
     if (newIngredient.name.trim()) {
-      setFormData({
-        ...formData,
-        ingredients: [...formData.ingredients, { ...newIngredient, quantity: parseFloat(newIngredient.quantity) || null, unit: null }]
-      });
+      if (editingIngredientIndex !== null) {
+        // Modifier l'ingrédient existant
+        const updatedIngredients = [...formData.ingredients];
+        updatedIngredients[editingIngredientIndex] = {
+          ...newIngredient,
+          quantity: parseFloat(newIngredient.quantity) || null,
+          unit: null
+        };
+        setFormData({
+          ...formData,
+          ingredients: updatedIngredients
+        });
+        setEditingIngredientIndex(null);
+      } else {
+        // Ajouter un nouvel ingrédient
+        setFormData({
+          ...formData,
+          ingredients: [...formData.ingredients, { ...newIngredient, quantity: parseFloat(newIngredient.quantity) || null, unit: null }]
+        });
+      }
       setNewIngredient({ name: '', quantity: '' });
     }
-  };
-
-  const handleRemoveIngredient = (index) => {
-    setFormData({
-      ...formData,
-      ingredients: formData.ingredients.filter((_, i) => i !== index)
-    });
   };
 
   const handleEditIngredient = (index) => {
@@ -95,7 +105,19 @@ export default function MyRecipes() {
       name: ingredient.name,
       quantity: ingredient.quantity || ''
     });
-    handleRemoveIngredient(index);
+    setEditingIngredientIndex(index);
+  };
+
+  const handleRemoveIngredient = (index) => {
+    setFormData({
+      ...formData,
+      ingredients: formData.ingredients.filter((_, i) => i !== index)
+    });
+    // Annuler l'édition si on supprime l'ingrédient en cours d'édition
+    if (editingIngredientIndex === index) {
+      setEditingIngredientIndex(null);
+      setNewIngredient({ name: '', quantity: '' });
+    }
   };
 
   const handleIngredientKeyPress = (e) => {
@@ -116,25 +138,14 @@ export default function MyRecipes() {
     }
   };
 
-  const handleDeleteIngredient = async (ingredientId) => {
-    if (window.confirm('Supprimer cet ingrédient?')) {
-      try {
-        await recipeService.deleteIngredient(ingredientId);
-        loadRecipes();
-      } catch (error) {
-        console.error('Erreur lors de la suppression de l\'ingrédient', error);
-      }
-    }
-  };
-
   if (loading) {
-    return <div className="text-center py-16 text-xs tracking-[0.2em] uppercase text-neutral-600">Chargement...</div>;
+    return <div className="loading-text">Chargement...</div>;
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-12">
-      <div className="flex justify-between items-center mb-16">
-        <h1 className="title-main text-2xl">MES RECETTES</h1>
+    <div className="page-container">
+      <div className="page-header">
+        <h1 className="page-title">MES RECETTES</h1>
         <button
           onClick={() => {
             setShowForm(!showForm);
@@ -142,66 +153,66 @@ export default function MyRecipes() {
             setFormData({ title: '', description: '', isPublic: true, ingredients: [] });
             setNewIngredient({ name: '', quantity: '' });
           }}
-          className="flex items-center gap-3 bg-neutral-900 text-white px-6 py-3 hover:bg-neutral-800 transition-colors text-xs tracking-[0.2em] uppercase"
+          className="btn-primary btn-icon"
         >
-          <PlusIcon className="h-4 w-4" />
+          <PlusIcon className="icon" />
           Nouvelle recette
         </button>
       </div>
 
       {showForm && (
-        <div className="border-b border-neutral-200 pb-12 mb-12">
-          <h3 className="text-xs font-light tracking-[0.2em] uppercase mb-8 text-neutral-600">
+        <div className="form-container">
+          <h3 className="form-title">
             {editingRecipe ? 'Modifier la recette' : 'Nouvelle recette'}
           </h3>
           <form onSubmit={handleSubmit} className="space-y-8">
-            <div>
-              <label className="block text-xs tracking-wider uppercase text-neutral-600 mb-3">Titre</label>
+            <div className="form-group">
+              <label className="form-label">Titre</label>
               <input
                 type="text"
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full px-0 py-3 border-0 border-b border-neutral-300 bg-transparent focus:border-neutral-900 focus:outline-none text-sm transition-colors"
+                className="form-input"
                 required
               />
             </div>
-            <div>
-              <label className="block text-xs tracking-wider uppercase text-neutral-600 mb-3">Description</label>
+            <div className="form-group">
+              <label className="form-label">Description</label>
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="w-full px-0 py-3 border-0 border-b border-neutral-300 bg-transparent focus:border-neutral-900 focus:outline-none text-sm transition-colors resize-none"
+                className="form-textarea"
                 rows="4"
               />
             </div>
 
-            {/* Section Ingrédients */}
-            <div>
-              <label className="block text-xs tracking-wider uppercase text-neutral-600 mb-3">Ingrédients</label>
+            <div className="form-group">
+              <label className="form-label">Ingrédients</label>
               
-              {/* Liste des ingrédients ajoutés */}
               {formData.ingredients.length > 0 && (
-                <div className="mb-4 space-y-2">
+                <div className="space-y-2 mb-4">
                   {formData.ingredients.map((ing, index) => (
-                    <div key={index} className="flex items-center justify-between bg-gray-100 px-3 py-2 rounded">
-                      <span className="text-xs">
+                    <div key={index} className="ingredient-item-edit">
+                      <span className="ingredient-text">
                         {ing.quantity && `${ing.quantity}g `}
                         {ing.name}
                       </span>
-                      <div className="flex gap-2">
+                      <div className="flex-gap-2">
                         <button
                           type="button"
                           onClick={() => handleEditIngredient(index)}
-                          className="bg-blue-500 text-white px-3 py-1 text-xs rounded hover:bg-blue-600"
+                          className="btn-edit"
+                          title="Modifier cet ingrédient"
                         >
-                          ✏️ Modifier
+                          ✏️
                         </button>
                         <button
                           type="button"
                           onClick={() => handleRemoveIngredient(index)}
-                          className="bg-red-500 text-white px-3 py-1 text-xs rounded hover:bg-red-600"
+                          className="btn-delete"
+                          title="Supprimer cet ingrédient"
                         >
-                          ✕ Supprimer
+                          ✕
                         </button>
                       </div>
                     </div>
@@ -209,15 +220,14 @@ export default function MyRecipes() {
                 </div>
               )}
 
-              {/* Formulaire d'ajout d'ingrédient */}
-              <div className="grid grid-cols-12 gap-3">
+              <div className="grid-form">
                 <input
                   type="text"
                   placeholder="Nom de l'ingrédient"
                   value={newIngredient.name}
                   onChange={(e) => setNewIngredient({ ...newIngredient, name: e.target.value })}
                   onKeyPress={handleIngredientKeyPress}
-                  className="col-span-9 px-3 py-2 border border-neutral-300 text-xs focus:border-neutral-900 focus:outline-none"
+                  className="col-span-9 form-input-bordered"
                 />
                 <input
                   type="number"
@@ -226,32 +236,30 @@ export default function MyRecipes() {
                   value={newIngredient.quantity}
                   onChange={(e) => setNewIngredient({ ...newIngredient, quantity: e.target.value })}
                   onKeyPress={handleIngredientKeyPress}
-                  className="col-span-2 px-3 py-2 border border-neutral-300 text-xs focus:border-neutral-900 focus:outline-none"
+                  className="col-span-2 form-input-bordered"
                 />
                 <button
                   type="button"
                   onClick={handleAddIngredient}
-                  className="col-span-1 bg-neutral-900 text-white hover:bg-neutral-800 flex items-center justify-center"
+                  className="col-span-1 btn-add"
+                  title={editingIngredientIndex !== null ? "Enregistrer la modification" : "Ajouter l'ingrédient"}
                 >
-                  <PlusIcon className="h-4 w-4" />
+                  {editingIngredientIndex !== null ? '✓' : <PlusIcon className="icon" />}
                 </button>
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="form-checkbox-wrapper">
               <input
                 type="checkbox"
                 checked={formData.isPublic}
                 onChange={(e) => setFormData({ ...formData, isPublic: e.target.checked })}
-                className="w-4 h-4 border-neutral-300"
+                className="form-checkbox"
               />
-              <label className="text-xs tracking-wider uppercase text-neutral-600">Recette publique</label>
+              <label className="form-label">Recette publique</label>
             </div>
-            <div className="flex gap-4 pt-4">
-              <button
-                type="submit"
-                className="bg-neutral-900 text-white px-8 py-4 hover:bg-neutral-800 transition-colors text-xs tracking-[0.2em] uppercase"
-              >
+            <div className="form-actions">
+              <button type="submit" className="btn-primary">
                 {editingRecipe ? 'Modifier' : 'Créer'}
               </button>
               <button
@@ -260,7 +268,7 @@ export default function MyRecipes() {
                   setShowForm(false);
                   setEditingRecipe(null);
                 }}
-                className="bg-neutral-200 text-neutral-900 px-8 py-4 hover:bg-neutral-300 transition-colors text-xs tracking-[0.2em] uppercase"
+                className="btn-secondary"
               >
                 Annuler
               </button>
@@ -269,61 +277,51 @@ export default function MyRecipes() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {recipes.map((recipe) => (
-          <div key={recipe.id} className="border-b border-neutral-200 pb-6">
-            <h3 className="text-sm font-light tracking-wide mb-4">{recipe.title}</h3>
-            <p className="text-neutral-600 text-xs leading-relaxed mb-6">{recipe.description}</p>
+      {!showForm && (
+        <div className="grid-recipes">
+          {recipes.map((recipe) => (
+            <div key={recipe.id} className="recipe-card">
+              <h3 className="recipe-title">{recipe.title}</h3>
+              <p className="recipe-description">{recipe.description}</p>
             
             {recipe.ingredients && recipe.ingredients.length > 0 && (
-              <div className="mb-6">
-                <h4 className="text-xs font-medium tracking-wide mb-2 text-neutral-700">INGRÉDIENTS</h4>
-                <div className="space-y-2">
+              <div className="ingredients-section">
+                <h4 className="ingredients-title">INGRÉDIENTS</h4>
+                <ul className="ingredients-list space-y-2">
                   {recipe.ingredients.map((ingredient) => (
-                    <div key={ingredient.id} className="flex items-center justify-between bg-gray-100 px-3 py-2 rounded">
-                      <span className="text-xs text-neutral-600">
+                    <li key={ingredient.id} className="ingredient-item">
+                      <span>
                         {ingredient.quantity && `${ingredient.quantity}g `}
                         {ingredient.name}
                       </span>
-                      <button
-                        onClick={() => handleDeleteIngredient(ingredient.id)}
-                        className="bg-red-500 text-white px-3 py-1 text-xs rounded hover:bg-red-600"
-                      >
-                        ✕ Supprimer
-                      </button>
-                    </div>
+                    </li>
                   ))}
-                </div>
+                </ul>
               </div>
             )}
             
-            <div className="flex justify-between items-center">
-              <span className={`text-xs tracking-wider uppercase ${recipe.isPublic ? 'text-neutral-900' : 'text-neutral-400'}`}>
+            <div className="recipe-footer">
+              <span className={`recipe-status ${recipe.isPublic ? 'recipe-status-public' : 'recipe-status-private'}`}>
                 {recipe.isPublic ? 'Public' : 'Privé'}
               </span>
-              <div className="flex gap-3">
-                <button
-                  onClick={() => handleEdit(recipe)}
-                  className="flex items-center gap-2 px-4 py-2 border border-neutral-900 text-neutral-900 hover:bg-neutral-900 hover:text-white transition-colors text-xs uppercase"
-                >
-                  <PencilIcon className="h-4 w-4" />
+              <div className="recipe-actions">
+                <button onClick={() => handleEdit(recipe)} className="btn-outline">
+                  <PencilIcon className="icon" />
                   Modifier
                 </button>
-                <button
-                  onClick={() => handleDelete(recipe.id)}
-                  className="flex items-center gap-2 px-4 py-2 border border-neutral-900 text-neutral-900 hover:bg-neutral-900 hover:text-white transition-colors text-xs uppercase"
-                >
-                  <TrashIcon className="h-4 w-4" />
+                <button onClick={() => handleDelete(recipe.id)} className="btn-outline">
+                  <TrashIcon className="icon" />
                   Supprimer
                 </button>
               </div>
             </div>
           </div>
         ))}
-      </div>
+        </div>
+      )}
 
-      {recipes.length === 0 && (
-        <p className="text-center text-neutral-400 mt-12 text-xs tracking-wider uppercase">
+      {!showForm && recipes.length === 0 && (
+        <p className="message-empty">
           Aucune recette. Cliquez sur "Nouvelle recette" pour commencer.
         </p>
       )}
