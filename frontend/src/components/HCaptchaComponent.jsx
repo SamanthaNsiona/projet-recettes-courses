@@ -19,7 +19,7 @@ const HCaptchaComponent = ({ onVerify, onError }) => {
   };
 
   return (
-    <div className="mb-4 flex justify-center">
+    <div className="captcha-container">
       <HCaptcha
         ref={captchaRef}
         sitekey="62a61d34-96aa-4c9e-8bec-c930c832fc86"

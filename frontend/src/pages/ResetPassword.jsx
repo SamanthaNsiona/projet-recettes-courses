@@ -52,56 +52,56 @@ export default function ResetPassword() {
 
   if (!token) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-neutral-50 px-6">
-        <div className="max-w-md flex flex-col auth-container">
-          <p className="text-center text-neutral-700">Token manquant ou invalide</p>
+      <div className="auth-page">
+        <div className="auth-box auth-container">
+          <p className="auth-error-text">Token manquant ou invalide</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-neutral-50 px-6">
-      <div className="max-w-md flex flex-col auth-container">
-        <h2 className="title-main text-2xl text-center text-neutral-800 auth-title">
+    <div className="auth-page">
+      <div className="auth-box auth-container">
+        <h2 className="title-main text-center auth-title">
           NOUVEAU MOT DE PASSE
         </h2>
         
         {error && (
-          <div className="border-l-2 border-neutral-900 bg-neutral-100 px-6 py-4 mb-8 text-sm text-neutral-700">
+          <div className="message-error">
             {error}
           </div>    
         )}
 
         {message && (
-          <div className="border-l-2 border-green-600 bg-green-50 px-6 py-4 mb-8 text-sm text-green-700">
+          <div className="message-success">
             {message}
           </div>    
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-8 flex flex-col items-center">
+        <form onSubmit={handleSubmit} className="auth-form">
           <div className="auth-input-wrapper">
-            <label className="block text-body text-xs uppercase text-neutral-600 mb-3">
+            <label className="form-label">
               Nouveau mot de passe
             </label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="auth-input transition-colors"
+              className="auth-input"
               required
             />
           </div>
 
           <div className="auth-input-wrapper">
-            <label className="block text-body text-xs uppercase text-neutral-600 mb-3 auth-label">
+            <label className="form-label auth-label">
               Confirmer le mot de passe
             </label>
             <input
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="auth-input transition-colors"
+              className="auth-input"
               required
             />
           </div>
@@ -110,7 +110,7 @@ export default function ResetPassword() {
             <button
               type="submit"
               disabled={loading}
-              className="auth-button"
+              className="auth-button btn-primary"
             >
               {loading ? 'Réinitialisation...' : 'Réinitialiser'}
             </button>
