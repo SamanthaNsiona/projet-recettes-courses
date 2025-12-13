@@ -3,32 +3,35 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id                   Int            @id @default(autoincrement())
-  name                 String
-  email                String         @unique
-  password             String
-  role                 String         @default("USER")
-  resetPasswordToken   String?
-  resetPasswordExpiry  DateTime?
-  recipes              Recipe[]
-  lists                ShoppingList[]
-  ingredients          Ingredient[]
+  id                  Int            @id @default(autoincrement())
+  name                String
+  email               String         @unique
+  password            String
+  role                String         @default("USER")
+  resetPasswordToken  String?
+  resetPasswordExpiry DateTime?
+  recipes             Recipe[]
+  lists               ShoppingList[]
+  ingredients         Ingredient[]
 }
 
 model Recipe {
-  id          Int          @id @default(autoincrement())
-  title       String
-  description String?
-  isPublic    Boolean      @default(false)
-  user        User         @relation(fields: [userId], references: [id])
-  userId      Int
-  ingredients Ingredient[]
+  id              Int          @id @default(autoincrement())
+  title           String
+  description     String?
+  ingredients     String // texte simple
+  steps           String // texte simple
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  isPublic        Boolean      @default(false)
+  userId          Int
+  user            User         @relation(fields: [userId], references: [id])
+  ingredientsList Ingredient[]
 }
 
 model Ingredient {
@@ -51,10 +54,10 @@ model ShoppingList {
 }
 
 model ShoppingItem {
-  id       Int           @id @default(autoincrement())
+  id       Int          @id @default(autoincrement())
   name     String
   quantity Float?
   unit     String?
-  list     ShoppingList  @relation(fields: [listId], references: [id])
+  list     ShoppingList @relation(fields: [listId], references: [id])
   listId   Int
 }

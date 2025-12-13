@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { ArrowRightOnRectangleIcon, BookOpenIcon, ShoppingCartIcon, UserIcon } from '@heroicons/react/24/outline';
+import { ArrowRightOnRectangleIcon, BookOpenIcon, ShoppingCartIcon, UserIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -38,6 +38,12 @@ export default function Navbar() {
               <ShoppingCartIcon className="navbar-icon" />
               Courses
             </Link>
+            {user.role === 'ADMIN' && (
+              <Link to="/admin" className="navbar-link navbar-admin">
+                <ShieldCheckIcon className="navbar-icon" />
+                Admin
+              </Link>
+            )}
           </div>
 
           <div className="navbar-user">

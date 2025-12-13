@@ -9,6 +9,7 @@ import ResetPassword from './pages/ResetPassword';
 import Recipes from './pages/Recipes';
 import MyRecipes from './pages/MyRecipes';
 import ShoppingLists from './pages/ShoppingLists';
+import AdminDashboard from './pages/AdminDashboard';
 
 function App() {
   return (
@@ -42,6 +43,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <ShoppingLists />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <AdminDashboard />
                 </ProtectedRoute>
               }
             />

@@ -22,7 +22,7 @@ const HCaptchaComponent = ({ onVerify, onError }) => {
     <div className="captcha-container">
       <HCaptcha
         ref={captchaRef}
-        sitekey="62a61d34-96aa-4c9e-8bec-c930c832fc86"
+        sitekey="10000000-ffff-ffff-ffff-000000000001"
         onVerify={handleVerify}
         onError={handleError}
         onExpire={handleExpire}

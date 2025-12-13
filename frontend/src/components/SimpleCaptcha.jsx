@@ -61,18 +61,20 @@ const SimpleCaptcha = ({ onVerify }) => {
     if (isNaN(userNum)) {
       setError('Veuillez entrer un nombre valide');
       setIsVerified(false);
-      onVerify(false);
+      onVerify(null);
       return;
     }
     
     if (userNum === captchaQuestion.answer) {
       setIsVerified(true);
       setError('');
-      onVerify(true);
+      // Générer un token simple (utilisé pour vérification backend)
+      const token = btoa(JSON.stringify({ answer: captchaQuestion.answer, timestamp: Date.now() }));
+      onVerify(token);
     } else {
       setIsVerified(false);
       setError('Réponse incorrecte. Veuillez réessayer.');
-      onVerify(false);
+      onVerify(null);
       // Générer une nouvelle question après une mauvaise réponse
       setTimeout(() => {
         generateCaptcha();
