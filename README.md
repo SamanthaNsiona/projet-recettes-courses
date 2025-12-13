@@ -55,17 +55,27 @@ Chaque membre du groupe a travaillé sur :
 
 L’application implémente un système d’authentification et d’autorisation sécurisé.
 
-* Authentification basée sur des tokens JWT
-* Deux rôles définis :
+Authentification basée sur des tokens JWT
 
-  * USER
-  * ADMIN
-* Les droits sont vérifiés côté backend
+Deux rôles définis :
+
+USER
+
+ADMIN
+
+Les droits sont vérifiés côté backend
+
+Des mesures de sécurité supplémentaires ont été mises en place :
+
+* Utilisation d’un rate limiter afin de limiter le nombre de requêtes et prévenir les tentatives d’abus
+
+* Intégration d’un CAPTCHA lors de l’inscription, afin de limiter les créations de comptes automatisées
 
 Un utilisateur ne peut pas :
 
-* modifier ou supprimer une recette qui ne lui appartient pas
-* accéder aux données privées d’un autre utilisateur
+* Modifier ou supprimer une recette qui ne lui appartient pas
+
+* Accéder aux données privées d’un autre utilisateur
 
 Les routes administrateur sont protégées par des middlewares spécifiques.
 
@@ -189,5 +199,6 @@ Lien vers la vidéo de démonstration :
 * Interface adaptée selon le rôle
 * Utilisation de Git avec commits individuels
 * Participation de chaque membre au front et au back
+
 
 
