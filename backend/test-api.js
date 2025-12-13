@@ -46,11 +46,11 @@ function request(method, path, data = null) {
 }
 
 async function testAPI() {
-  console.log('🧪 Début des tests API\n');
+  console.log('Début des tests API\n');
 
   try {
     // Test 1: Inscription
-    console.log('1️⃣ Test inscription...');
+    console.log('Test inscription...');
     const registerRes = await request('POST', '/api/auth/register', {
       name: 'Test User',
       email: `test${Date.now()}@example.com`,
@@ -67,7 +67,7 @@ async function testAPI() {
     }
 
     // Test 2: Connexion
-    console.log('2️⃣ Test connexion...');
+    console.log('Test connexion...');
     const loginRes = await request('POST', '/api/auth/login', {
       email: registerRes.data.user.email,
       password: 'password123'
@@ -76,7 +76,7 @@ async function testAPI() {
     console.log(loginRes.data.token ? '   ✅ Connexion réussie\n' : '   ❌ Échec\n');
 
     // Test 3: Créer une recette
-    console.log('3️⃣ Test création recette...');
+    console.log('Test création recette...');
     const createRecipeRes = await request('POST', '/api/recipes', {
       title: 'Pâtes Carbonara',
       description: 'Délicieuses pâtes à la carbonara',
@@ -91,14 +91,14 @@ async function testAPI() {
     }
 
     // Test 4: Lire les recettes
-    console.log('4️⃣ Test lecture recettes...');
+    console.log('Test lecture recettes...');
     const getRecipesRes = await request('GET', '/api/recipes');
     console.log(`   Status: ${getRecipesRes.status}`);
-    console.log(`   ✅ ${getRecipesRes.data.length || 0} recette(s) trouvée(s)\n`);
+    console.log(` ${getRecipesRes.data.length || 0} recette(s) trouvée(s)\n`);
 
     // Test 5: Modifier une recette
     if (recipeId) {
-      console.log('5️⃣ Test modification recette...');
+      console.log('Test modification recette...');
       const updateRecipeRes = await request('PUT', `/api/recipes/${recipeId}`, {
         title: 'Pâtes Carbonara Modifiées',
         description: 'Version améliorée',
@@ -109,7 +109,7 @@ async function testAPI() {
     }
 
     // Test 6: Créer une liste de courses
-    console.log('6️⃣ Test création liste de courses...');
+    console.log('Test création liste de courses...');
     const createListRes = await request('POST', '/api/shopping-lists', {
       title: 'Courses du weekend',
       userId: userId
@@ -123,14 +123,14 @@ async function testAPI() {
     }
 
     // Test 7: Lire les listes
-    console.log('7️⃣ Test lecture listes...');
+    console.log('Test lecture listes...');
     const getListsRes = await request('GET', '/api/shopping-lists');
     console.log(`   Status: ${getListsRes.status}`);
-    console.log(`   ✅ ${getListsRes.data.length || 0} liste(s) trouvée(s)\n`);
+    console.log(` ${getListsRes.data.length || 0} liste(s) trouvée(s)\n`);
 
     // Test 8: Ajouter un item à la liste
     if (listId) {
-      console.log('8️⃣ Test ajout item...');
+      console.log('Test ajout item...');
       const addItemRes = await request('POST', `/api/shopping-items/${listId}`, {
         name: 'Pâtes',
         quantity: 500,
@@ -142,15 +142,15 @@ async function testAPI() {
 
     // Test 9: Supprimer la recette
     if (recipeId) {
-      console.log('9️⃣ Test suppression recette...');
+      console.log('Test suppression recette...');
       const deleteRecipeRes = await request('DELETE', `/api/recipes/${recipeId}`);
       console.log(`   Status: ${deleteRecipeRes.status}`);
       console.log(deleteRecipeRes.status === 200 ? '   ✅ Recette supprimée\n' : '   ❌ Échec\n');
     }
 
-    console.log('✅ Tests terminés avec succès!');
+    console.log('Tests terminés avec succès!');
   } catch (error) {
-    console.error('❌ Erreur lors des tests:', error.message);
+    console.error('Erreur lors des tests:', error.message);
   }
 }
 
