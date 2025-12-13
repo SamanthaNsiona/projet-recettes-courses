@@ -27,34 +27,34 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-neutral-50 px-6">
-      <div className="max-w-md flex flex-col auth-container">
-        <h2 className="title-main text-2xl text-center text-neutral-800 auth-title">
+    <div className="auth-page">
+      <div className="auth-box auth-container">
+        <h2 className="title-main text-center auth-title">
           REINITIALISER VOTRE MOT DE PASSE
         </h2>
         
         {error && (
-          <div className="border-l-2 border-neutral-900 bg-neutral-100 px-6 py-4 mb-8 text-sm text-neutral-700">
+          <div className="message-error">
             {error}
           </div>    
         )}
 
         {message && (
-          <div className="border-l-2 border-green-600 bg-green-50 px-6 py-4 mb-8 text-sm text-green-700">
+          <div className="message-success">
             {message}
           </div>    
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-8 flex flex-col items-center">
+        <form onSubmit={handleSubmit} className="auth-form">
           <div className="auth-input-wrapper">
-            <label className="block text-body text-xs uppercase text-neutral-600 mb-3">
+            <label className="form-label">
               Email
             </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="auth-input transition-colors"
+              className="auth-input"
               required
             />
           </div>
@@ -63,15 +63,15 @@ export default function ForgotPassword() {
             <button
               type="submit"
               disabled={loading}
-              className="auth-button"
+              className="auth-button btn-primary"
             >
               {loading ? 'Envoi...' : 'Réinitialiser'}
             </button>
           </div>
         </form>
 
-        <p className="text-center mt-12 text-xs tracking-wider text-neutral-500 uppercase flex justify-center auth-footer">
-          <Link to="/login" className="text-neutral-900 auth-link">
+        <p className="auth-footer-text">
+          <Link to="/login" className="auth-link">
             Retour à la connexion
           </Link>
         </p>
