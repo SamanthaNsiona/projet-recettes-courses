@@ -8,11 +8,11 @@ async function addIngredients() {
       include: { ingredients: true }
     });
 
-    console.log('\n🍽️ Ajout des ingrédients aux recettes...\n');
+    console.log('\nAjout des ingrédients aux recettes...\n');
 
     for (const recipe of recipes) {
       if (recipe.ingredients.length === 0) {
-        console.log(`📝 Recette: "${recipe.title}" - Pas d'ingrédients`);
+        console.log(`Recette: "${recipe.title}" - Pas d'ingrédients`);
         
         // Ajouter des ingrédients selon la recette
         let ingredientsToAdd = [];
@@ -55,14 +55,14 @@ async function addIngredients() {
               }
             });
           }
-          console.log(`   ✅ ${ingredientsToAdd.length} ingrédients ajoutés`);
+          console.log(` ${ingredientsToAdd.length} ingrédients ajoutés`);
         }
       } else {
-        console.log(`📝 Recette: "${recipe.title}" - ${recipe.ingredients.length} ingrédients déjà présents`);
+        console.log(`Recette: "${recipe.title}" - ${recipe.ingredients.length} ingrédients déjà présents`);
       }
     }
 
-    console.log('\n✅ Terminé!\n');
+    console.log('\nTerminé!\n');
     
     // Afficher le résultat
     const recipesWithIngredients = await prisma.recipe.findMany({
@@ -72,20 +72,20 @@ async function addIngredients() {
       }
     });
 
-    console.log('📋 Résultat final:\n');
+    console.log('Résultat final:\n');
     for (const recipe of recipesWithIngredients) {
-      console.log(`\n🍽️ ${recipe.title} (par ${recipe.user.name})`);
+      console.log(`\n${recipe.title} (par ${recipe.user.name})`);
       if (recipe.ingredients.length > 0) {
         recipe.ingredients.forEach(ing => {
           console.log(`   - ${ing.quantity} ${ing.unit} ${ing.name}`);
         });
       } else {
-        console.log('   ❌ Pas d\'ingrédients');
+        console.log('Pas d\'ingrédients');
       }
     }
 
   } catch (error) {
-    console.error('❌ Erreur:', error);
+    console.error('Erreur:', error);
   } finally {
     await prisma.$disconnect();
   }
