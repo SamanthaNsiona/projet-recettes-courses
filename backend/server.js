@@ -20,7 +20,7 @@ if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
   process.exit(1);
 }
 
-console.log('✅ Variables EMAIL chargées:', {
+console.log('Variables EMAIL chargées:', {
   EMAIL_USER: process.env.EMAIL_USER,
   EMAIL_PASSWORD: '***'
 });
@@ -68,17 +68,17 @@ process.on('unhandledRejection', (err) => {
 
 // Empêcher la fermeture du serveur
 process.on('SIGTERM', () => {
-  console.log('⚠️  SIGTERM reçu - IGNORÉ');
+  console.log('SIGTERM reçu - IGNORÉ');
 });
 
 process.on('SIGINT', () => {
-  console.log('⚠️  SIGINT reçu - IGNORÉ');
+  console.log('SIGINT reçu - IGNORÉ');
 });
 
 const PORT = process.env.PORT || 5000;
 const server = app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log('📧 Email:', process.env.EMAIL_USER);
+  console.log(`Server running on port ${PORT}`);
+  console.log('Email:', process.env.EMAIL_USER);
 });
 
 // Garder le processus actif
