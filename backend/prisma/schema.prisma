@@ -3,34 +3,48 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id                   Int            @id @default(autoincrement())
-  name                 String
-  email                String         @unique
-  password             String
-  role                 String         @default("USER")
-  resetPasswordToken   String?
-  resetPasswordExpiry  DateTime?
-  recipes              Recipe[]
-  lists                ShoppingList[]
-  ingredients          Ingredient[]
+  id                  Int            @id @default(autoincrement())
+  name                String
+  email               String         @unique
+  password            String
+  role                String         @default("USER")
+  resetPasswordToken  String?
+  resetPasswordExpiry DateTime?
+  recipes             Recipe[]       @relation("UserRecipes")
+  lists               ShoppingList[]
+  ingredients         Ingredient[]
+  favorites           Favorite[]
 }
 
 model Recipe {
-  id          Int      @id @default(autoincrement())
-  title       String
-  description String?
-  ingredients String   // texte simple
-  steps       String   // texte simple
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  userId      Int
-  user        User     @relation(fields: [userId], references: [id])
+  id              Int          @id @default(autoincrement())
+  title           String
+  description     String?
+  ingredients     String // texte simple
+  steps           String // texte simple
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  isPublic        Boolean      @default(false)
+  userId          Int
+  user            User         @relation("UserRecipes", fields: [userId], references: [id])
+  ingredientsList Ingredient[]
+  favorites       Favorite[]
+}
+
+model Favorite {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  recipeId  Int
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipe    Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, recipeId])
 }
 
 
@@ -54,10 +68,11 @@ model ShoppingList {
 }
 
 model ShoppingItem {
-  id       Int           @id @default(autoincrement())
+  id       Int          @id @default(autoincrement())
   name     String
   quantity Float?
   unit     String?
-  list     ShoppingList  @relation(fields: [listId], references: [id])
+  checked  Boolean      @default(false)
+  list     ShoppingList @relation(fields: [listId], references: [id], onDelete: Cascade)
   listId   Int
 }

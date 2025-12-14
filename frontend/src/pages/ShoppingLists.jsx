@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { shoppingListService } from '../services/shoppingListService';
-import { useAuth } from '../contexts/AuthContext';
 import { PlusIcon, TrashIcon, ShoppingCartIcon } from '@heroicons/react/24/outline';
 
 export default function ShoppingLists() {
@@ -10,7 +9,6 @@ export default function ShoppingLists() {
   const [loading, setLoading] = useState(true);
   const [newListTitle, setNewListTitle] = useState('');
   const [newItem, setNewItem] = useState({ name: '', quantity: '', unit: '' });
-  const { user } = useAuth();
 
   useEffect(() => {
     loadLists();
@@ -38,17 +36,19 @@ export default function ShoppingLists() {
 
   const createList = async (e) => {
     e.preventDefault();
+    console.log('📝 Création liste - titre:', newListTitle);
     if (!newListTitle.trim()) return;
 
     try {
-      await shoppingListService.create({
-        title: newListTitle,
-        userId: user.id,
+      const result = await shoppingListService.create({
+        title: newListTitle
       });
+      console.log('✅ Liste créée:', result);
       setNewListTitle('');
       loadLists();
     } catch (error) {
-      console.error('Erreur lors de la création de la liste', error);
+      console.error('❌ Erreur lors de la création de la liste', error);
+      console.error('Détails:', error.response?.data);
     }
   };
 
@@ -96,6 +96,34 @@ export default function ShoppingLists() {
     } catch (error) {
       console.error('Erreur lors de la suppression de l\'item', error);
     }
+  };
+
+  const toggleChecked = async (item) => {
+    try {
+      await shoppingListService.updateItem(item.id, {
+        ...item,
+        checked: !item.checked
+      });
+      loadItems(selectedList.id);
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour de l\'item', error);
+    }
+  };
+
+  const handlePrint = () => {
+    const printWindow = window.open('', '', 'height=600,width=800');
+    printWindow.document.write('<html><head><title>' + selectedList.title + '</title>');
+    printWindow.document.write('<style>body{font-family:Arial,sans-serif;padding:20px;}h1{border-bottom:2px solid #000;padding-bottom:10px;}ul{list-style:none;padding:0;}li{padding:8px 0;border-bottom:1px solid #eee;}</style>');
+    printWindow.document.write('</head><body>');
+    printWindow.document.write('<h1>' + selectedList.title + '</h1>');
+    printWindow.document.write('<ul>');
+    items.forEach(item => {
+      const qty = item.quantity ? `${item.quantity}${item.unit || ''} ` : '';
+      printWindow.document.write('<li>☐ ' + qty + item.name + '</li>');
+    });
+    printWindow.document.write('</ul></body></html>');
+    printWindow.document.close();
+    printWindow.print();
   };
 
   if (loading) {
@@ -164,7 +192,16 @@ export default function ShoppingLists() {
         <div className="section-divider">
           {selectedList ? (
             <>
-              <h2 className="form-title">{selectedList.title}</h2>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+                <h2 className="form-title" style={{ margin: 0 }}>{selectedList.title}</h2>
+                <button
+                  onClick={handlePrint}
+                  className="btn-outline"
+                  style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                >
+                  Imprimer
+                </button>
+              </div>
 
               <form onSubmit={addItem} className="mb-8">
                 <div className="grid-form">
@@ -199,11 +236,27 @@ export default function ShoppingLists() {
 
               <div className="space-y-2">
                 {items.map((item) => (
-                  <div key={item.id} className="shopping-item">
-                    <span className="shopping-item-name">{item.name}</span>
+                  <div key={item.id} className="shopping-item" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <input
+                      type="checkbox"
+                      checked={item.checked || false}
+                      onChange={() => toggleChecked(item)}
+                      className="form-checkbox"
+                      style={{ width: '1.25rem', height: '1.25rem', cursor: 'pointer' }}
+                    />
+                    <span className="shopping-item-name" style={{ 
+                      textDecoration: item.checked ? 'line-through' : 'none',
+                      color: item.checked ? '#a3a3a3' : 'inherit',
+                      flex: 1
+                    }}>
+                      {item.name}
+                    </span>
                     <div className="shopping-item-details">
                       {item.quantity && (
-                        <span className="shopping-item-quantity">
+                        <span className="shopping-item-quantity" style={{ 
+                          textDecoration: item.checked ? 'line-through' : 'none',
+                          color: item.checked ? '#a3a3a3' : 'inherit'
+                        }}>
                           {item.quantity} {item.unit}
                         </span>
                       )}

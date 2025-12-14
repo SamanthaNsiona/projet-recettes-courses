@@ -1,16 +1,18 @@
 import { useState, useEffect } from 'react';
 import { recipeService } from '../services/recipeService';
-import { PlusIcon, PencilIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, PencilIcon, TrashIcon, XMarkIcon, BookOpenIcon, ShoppingCartIcon } from '@heroicons/react/24/outline';
+import AddToListModal from '../components/AddToListModal';
 
 export default function MyRecipes() {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingRecipe, setEditingRecipe] = useState(null);
+  const [showAddToList, setShowAddToList] = useState(null);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    isPublic: true,
+    isPublic: false,
     ingredients: []
   });
   const [newIngredient, setNewIngredient] = useState({
@@ -36,6 +38,9 @@ export default function MyRecipes() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('🚀 Soumission du formulaire');
+    console.log('📝 Données du formulaire:', formData);
+    
     try {
       // Nettoyer les ingrédients (enlever les IDs pour le backend)
       const cleanedData = {
@@ -47,10 +52,15 @@ export default function MyRecipes() {
         }))
       };
 
+      console.log('🧹 Données nettoyées:', cleanedData);
+
       if (editingRecipe) {
+        console.log('✏️ Mise à jour de la recette:', editingRecipe.id);
         await recipeService.update(editingRecipe.id, cleanedData);
       } else {
-        await recipeService.create(cleanedData);
+        console.log('➕ Création d\'une nouvelle recette');
+        const result = await recipeService.create(cleanedData);
+        console.log('✅ Recette créée:', result);
       }
       setFormData({ title: '', description: '', isPublic: true, ingredients: [] });
       setNewIngredient({ name: '', quantity: '' });
@@ -58,7 +68,9 @@ export default function MyRecipes() {
       setShowForm(false);
       loadRecipes();
     } catch (error) {
-      console.error('Erreur lors de la sauvegarde', error);
+      console.error('❌ Erreur lors de la sauvegarde:', error);
+      console.error('📋 Détails de l\'erreur:', error.response?.data);
+      alert(`Erreur: ${error.response?.data?.message || error.message}`);
     }
   };
 
@@ -67,7 +79,7 @@ export default function MyRecipes() {
     setFormData({
       title: recipe.title,
       description: recipe.description || '',
-      isPublic: recipe.isPublic,
+      isPublic: recipe.isPublic || false,
       ingredients: recipe.ingredients || []
     });
     setShowForm(true);
@@ -139,26 +151,33 @@ export default function MyRecipes() {
   };
 
   if (loading) {
-    return <div className="loading-text">Chargement...</div>;
+    return (
+      <div className="page-container">
+        <div className="loading-text">Chargement...</div>
+      </div>
+    );
   }
 
   return (
     <div className="page-container">
-      <div className="page-header">
-        <h1 className="page-title">MES RECETTES</h1>
-        <button
-          onClick={() => {
-            setShowForm(!showForm);
-            setEditingRecipe(null);
-            setFormData({ title: '', description: '', isPublic: true, ingredients: [] });
-            setNewIngredient({ name: '', quantity: '' });
-          }}
-          className="btn-primary btn-icon"
-        >
-          <PlusIcon className="icon" />
-          Nouvelle recette
-        </button>
-      </div>
+      <h1 className="page-title-icon">
+        <BookOpenIcon className="page-icon" />
+        MES RECETTES
+      </h1>
+      
+      <button
+        onClick={() => {
+          setShowForm(!showForm);
+          setEditingRecipe(null);
+          setFormData({ title: '', description: '', isPublic: false, ingredients: [] });
+          setNewIngredient({ name: '', quantity: '' });
+        }}
+        className="btn-add"
+        style={{ marginBottom: '2rem' }}
+      >
+        <PlusIcon className="icon" />
+        Nouvelle recette
+      </button>
 
       {showForm && (
         <div className="form-container">
@@ -256,8 +275,9 @@ export default function MyRecipes() {
                 onChange={(e) => setFormData({ ...formData, isPublic: e.target.checked })}
                 className="form-checkbox"
               />
-              <label className="form-label">Recette publique</label>
+              <label className="form-label" style={{ marginBottom: 0 }}>Recette publique</label>
             </div>
+
             <div className="form-actions">
               <button type="submit" className="btn-primary">
                 {editingRecipe ? 'Modifier' : 'Créer'}
@@ -305,6 +325,10 @@ export default function MyRecipes() {
                 {recipe.isPublic ? 'Public' : 'Privé'}
               </span>
               <div className="recipe-actions">
+                <button onClick={() => setShowAddToList(recipe)} className="btn-outline">
+                  <ShoppingCartIcon className="icon" />
+                  Liste
+                </button>
                 <button onClick={() => handleEdit(recipe)} className="btn-outline">
                   <PencilIcon className="icon" />
                   Modifier
@@ -324,6 +348,13 @@ export default function MyRecipes() {
         <p className="message-empty">
           Aucune recette. Cliquez sur "Nouvelle recette" pour commencer.
         </p>
+      )}
+
+      {showAddToList && (
+        <AddToListModal
+          recipe={showAddToList}
+          onClose={() => setShowAddToList(null)}
+        />
       )}
     </div>
   );

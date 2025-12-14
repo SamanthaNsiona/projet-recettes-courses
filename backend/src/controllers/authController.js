@@ -11,41 +11,14 @@ const register = async (req, res) => {
   try {
     const { name, email, password, role, captchaToken } = req.body;
 
-    // Validation du captcha
-    if (!captchaToken) {
-      return res.status(400).json({ message: "Veuillez compléter la vérification hCaptcha" });
-    }
-
-    // Vérifier le token hCaptcha avec l'API hCaptcha
-    const hcaptchaSecret = process.env.HCAPTCHA_SECRET_KEY;
-    console.log('🔐 Vérification hCaptcha - Token reçu:', captchaToken ? 'OUI' : 'NON');
-    console.log('🔐 Secret key configurée:', hcaptchaSecret ? 'OUI' : 'NON');
-    
-    try {
-      const params = new URLSearchParams();
-      params.append('secret', hcaptchaSecret);
-      params.append('response', captchaToken);
-      
-      console.log('📡 Envoi de la requête à hCaptcha...');
-      const hcaptchaResponse = await axios.post('https://hcaptcha.com/siteverify', params, {
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-      });
-      
-      console.log('📡 Réponse hCaptcha:', hcaptchaResponse.data);
-      
-      if (!hcaptchaResponse.data.success) {
-        console.error('❌ hCaptcha verification failed:', hcaptchaResponse.data);
-        return res.status(400).json({ 
-          message: "Échec de la vérification hCaptcha",
-          details: hcaptchaResponse.data['error-codes']
-        });
-      }
-      
-      console.log('✅ hCaptcha verification successful');
-    } catch (captchaError) {
-      console.error('❌ hCaptcha verification error:', captchaError.message);
-      return res.status(500).json({ message: "Erreur lors de la vérification hCaptcha" });
-    }
+    console.log('\n');
+    console.log('═══════════════════════════════════════════════════════════');
+    console.log('📝 NOUVELLE INSCRIPTION');
+    console.log('═══════════════════════════════════════════════════════════');
+    console.log('✉️  Email:', email);
+    console.log('👤 Nom:', name);
+    console.log('🎫 Captcha: ✅ VALIDÉ PAR MIDDLEWARE');
+    console.log('═══════════════════════════════════════════════════════════\n');
 
     // Validation des entrées
     if (!name || !email || !password) {
@@ -74,6 +47,14 @@ const register = async (req, res) => {
 
     
     const { password: _, ...safeUser } = user;
+
+    console.log('════════════════════════════════════════════════════════════');
+    console.log('✅ INSCRIPTION RÉUSSIE');
+    console.log('════════════════════════════════════════════════════════════');
+    console.log('ID:', user.id);
+    console.log('Email:', user.email);
+    console.log('Role:', user.role);
+    console.log('════════════════════════════════════════════════════════════\n');
 
     res.status(201).json({
       message: "Utilisateur créé",
@@ -220,4 +201,82 @@ const resetPassword = async (req, res) => {
   }
 };
 
-module.exports = { register, login, forgotPassword, resetPassword };
+// Récupérer l'utilisateur actuel (basé sur le JWT)
+const getCurrentUser = async (req, res) => {
+  try {
+    const userId = req.userId; // Défini par le middleware authMiddleware
+    
+    if (!userId) {
+      return res.status(401).json({ message: "Non authentifié" });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.error('Erreur dans getCurrentUser:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Changer le mot de passe (utilisateur connecté)
+const changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    const userId = req.user.id;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ message: "Mot de passe actuel et nouveau requis" });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ message: "Le nouveau mot de passe doit contenir au moins 6 caractères" });
+    }
+
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Mot de passe actuel incorrect" });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await prisma.user.update({
+      where: { id: userId },
+      data: { password: hashedPassword }
+    });
+
+    res.status(200).json({ message: "Mot de passe changé avec succès" });
+  } catch (error) {
+    console.error('Erreur dans changePassword:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Supprimer le compte utilisateur
+const deleteAccount = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    await prisma.user.delete({ where: { id: userId } });
+
+    res.status(200).json({ message: "Compte supprimé avec succès" });
+  } catch (error) {
+    console.error('Erreur dans deleteAccount:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { register, login, forgotPassword, resetPassword, getCurrentUser, changePassword, deleteAccount };
