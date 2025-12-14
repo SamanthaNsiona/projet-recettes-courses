@@ -231,4 +231,52 @@ const getCurrentUser = async (req, res) => {
   }
 };
 
-module.exports = { register, login, forgotPassword, resetPassword, getCurrentUser };
+// Changer le mot de passe (utilisateur connecté)
+const changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    const userId = req.user.id;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ message: "Mot de passe actuel et nouveau requis" });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ message: "Le nouveau mot de passe doit contenir au moins 6 caractères" });
+    }
+
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Mot de passe actuel incorrect" });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await prisma.user.update({
+      where: { id: userId },
+      data: { password: hashedPassword }
+    });
+
+    res.status(200).json({ message: "Mot de passe changé avec succès" });
+  } catch (error) {
+    console.error('Erreur dans changePassword:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Supprimer le compte utilisateur
+const deleteAccount = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    await prisma.user.delete({ where: { id: userId } });
+
+    res.status(200).json({ message: "Compte supprimé avec succès" });
+  } catch (error) {
+    console.error('Erreur dans deleteAccount:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { register, login, forgotPassword, resetPassword, getCurrentUser, changePassword, deleteAccount };

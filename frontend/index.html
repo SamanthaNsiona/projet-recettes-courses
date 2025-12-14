@@ -15,5 +15,12 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script src="https://js.hcaptcha.com/1/api.js?render=explicit&onload=hCaptchaOnLoad&endpoint=https://hcaptcha.com" async defer></script>
+    <script>
+      function hCaptchaOnLoad() {
+        console.log('✅ hCaptcha API complètement chargé et prêt');
+        window.hcaptchaReady = true;
+      }
+    </script>
   </body>
 </html>

@@ -35,7 +35,7 @@ export default function Login() {
   return (
     <div className="auth-page">
       <div className="auth-box auth-container">
-        <h2 className="title-main text-center auth-title">
+        <h2 className="title-main auth-title">
           CONNEXION
         </h2>
         

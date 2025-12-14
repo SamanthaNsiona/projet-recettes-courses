@@ -12,6 +12,7 @@ const shoppingListRoutes = require("./src/routes/shoppingListRoutes");
 const shoppingItemRoutes = require("./src/routes/shoppingItemRoutes");
 const courseRoutes = require("./src/routes/courseRoutes");
 const adminRoutes = require("./src/routes/adminRoutes");
+const contactRoutes = require("./src/routes/contactRoutes");
 const testRoutes = require("./src/routes/testRoutes");
 
 dotenv.config();
@@ -48,6 +49,7 @@ app.use("/api/shopping-lists", shoppingListRoutes);
 app.use("/api/shopping-items", shoppingItemRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/contact", contactRoutes);
 app.use("/api/test", testRoutes);
 
 // Test hCaptcha endpoint
@@ -64,6 +66,48 @@ app.use((err, req, res, next) => {
   console.error('ERREUR SERVEUR:', err);
   res.status(500).json({ message: err.message });
 });
+
+async function verifyHCaptcha(req, res, next) {
+  const token = req.body.captchaToken;
+  
+  console.log('\n════════════════════════════════════════════════════════════');
+  console.log('🔐 VÉRIFICATION HCAPTCHA - SERVEUR');
+  console.log('════════════════════════════════════════════════════════════');
+  console.log('🎫 Token reçu:', token ? token.substring(0, 30) + '...' : '❌ AUCUN');
+  console.log('🔑 Secret Key:', process.env.HCAPTCHA_SECRET_KEY);
+  console.log('════════════════════════════════════════════════════════════\n');
+
+  if (!token) {
+    console.log('❌ Token manquant');
+    return res.status(400).json({ error: "Captcha manquant" });
+  }
+
+  try {
+    console.log('📡 Envoi à hCaptcha.com...');
+    const response = await fetch("https://hcaptcha.com/siteverify", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: `secret=${process.env.HCAPTCHA_SECRET_KEY}&response=${token}`
+    });
+
+    const data = await response.json();
+    console.log('✅ Réponse de hCaptcha:', JSON.stringify(data, null, 2));
+
+    if (!data.success) {
+      console.log('❌ Captcha invalide');
+      return res.status(400).json({ error: "Captcha invalide" });
+    }
+
+    console.log('✅ Captcha valide - Passage à next()');
+    console.log('════════════════════════════════════════════════════════════\n');
+    next();
+
+    next();
+  } catch (err) {
+    console.error("Erreur hCaptcha :", err);
+    return res.status(500).json({ error: "Erreur lors de la vérification captcha" });
+  }
+}
 
 // Gestion des erreurs non gérées - EMPÊCHER LE CRASH
 process.on('uncaughtException', (err) => {

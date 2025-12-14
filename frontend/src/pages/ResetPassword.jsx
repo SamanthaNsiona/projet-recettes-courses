@@ -63,7 +63,7 @@ export default function ResetPassword() {
   return (
     <div className="auth-page">
       <div className="auth-box auth-container">
-        <h2 className="title-main text-center auth-title">
+        <h2 className="title-main auth-title">
           NOUVEAU MOT DE PASSE
         </h2>
         
@@ -74,7 +74,14 @@ export default function ResetPassword() {
         )}
 
         {message && (
-          <div className="message-success">
+          <div style={{ 
+            borderLeft: '2px solid #16a34a', 
+            backgroundColor: '#f0fdf4', 
+            padding: '1rem 1.5rem', 
+            marginBottom: '2rem', 
+            fontSize: '0.875rem', 
+            color: '#15803d' 
+          }}>
             {message}
           </div>    
         )}

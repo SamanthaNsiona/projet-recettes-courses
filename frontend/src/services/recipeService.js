@@ -42,4 +42,22 @@ export const recipeService = {
     const response = await api.delete(`/recipes/ingredient/${ingredientId}`);
     return response.data;
   },
+
+  // Ajouter aux favoris
+  addFavorite: async (recipeId) => {
+    const response = await api.post(`/recipes/${recipeId}/favorite`);
+    return response.data;
+  },
+
+  // Retirer des favoris
+  removeFavorite: async (recipeId) => {
+    const response = await api.delete(`/recipes/${recipeId}/favorite`);
+    return response.data;
+  },
+
+  // Récupérer les favoris
+  getFavorites: async () => {
+    const response = await api.get('/recipes/favorites');
+    return response.data;
+  },
 };

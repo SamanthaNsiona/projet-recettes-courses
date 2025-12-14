@@ -20,6 +20,9 @@ export default function Register() {
     e.preventDefault();
     setError('');
 
+    console.log('📝 Tentative d\'inscription');
+    console.log('🎫 Token captcha:', captchaToken ? '✅ OUI' : '❌ NON');
+
     if (formData.password !== formData.confirmPassword) {
       setError('Les mots de passe ne correspondent pas');
       return;
@@ -33,14 +36,17 @@ export default function Register() {
     setLoading(true);
 
     try {
+      console.log('📤 Envoi inscription au serveur');
       await register({
         name: formData.name,
         email: formData.email,
         password: formData.password,
         captchaToken: captchaToken,
       });
+      console.log('✅ Inscription réussie !');
       navigate('/recipes');
     } catch (err) {
+      console.error('❌ Erreur inscription:', err.response?.data?.message);
       setError(err.response?.data?.message || 'Erreur lors de l\'inscription');
     } finally {
       setLoading(false);
@@ -50,7 +56,7 @@ export default function Register() {
   return (
     <div className="auth-page">
       <div className="auth-box auth-container">
-        <h2 className="title-main text-center auth-title">
+        <h2 className="title-main auth-title">
           INSCRIPTION
         </h2>
         

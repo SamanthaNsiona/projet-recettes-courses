@@ -49,4 +49,16 @@ export const authService = {
     const response = await api.post('/auth/reset-password', { token, newPassword });
     return response.data;
   },
+
+  // Changer le mot de passe (utilisateur connecté)
+  changePassword: async (currentPassword, newPassword) => {
+    const response = await api.post('/auth/change-password', { currentPassword, newPassword });
+    return response.data;
+  },
+
+  // Supprimer le compte
+  deleteAccount: async () => {
+    const response = await api.delete('/auth/delete-account');
+    return response.data;
+  },
 };

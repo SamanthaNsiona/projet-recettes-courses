@@ -48,4 +48,10 @@ export const shoppingListService = {
     const response = await api.delete(`/shopping-items/${itemId}`);
     return response.data;
   },
+
+  // Ajouter une recette entière à la liste
+  addRecipeToList: async (listId, recipeId) => {
+    const response = await api.post(`/shopping-items/${listId}/recipe`, { recipeId });
+    return response.data;
+  },
 };

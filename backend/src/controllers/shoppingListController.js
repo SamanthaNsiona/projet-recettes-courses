@@ -16,6 +16,7 @@ const getLists = async (req, res) => {
 const createList = async (req, res) => {
   try {
     const { title } = req.body;
+    console.log('📝 Création liste:', { title, userId: req.user.id });
 
     const list = await prisma.shoppingList.create({
       data: { 
@@ -24,8 +25,10 @@ const createList = async (req, res) => {
       }
     });
 
+    console.log('✅ Liste créée:', list);
     res.status(201).json(list);
   } catch (error) {
+    console.error('❌ Erreur création liste:', error);
     res.status(500).json({ error: error.message });
   }
 };

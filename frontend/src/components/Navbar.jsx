@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { ArrowRightOnRectangleIcon, BookOpenIcon, ShoppingCartIcon, UserIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
+import { HomeIcon, BookOpenIcon, ShoppingCartIcon, UserIcon, ShieldCheckIcon, PowerIcon, HeartIcon, EnvelopeIcon } from '@heroicons/react/24/outline';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -17,7 +17,7 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="navbar-container">
         <div className="navbar-title">
-          <Link to="/recipes" className="navbar-logo">
+          <Link to="/" className="navbar-logo">
             MyRecipes
           </Link>
         </div>
@@ -26,6 +26,10 @@ export default function Navbar() {
         
         <div className="navbar-nav">
           <div className="navbar-links">
+            <Link to="/" className="navbar-link">
+              <HomeIcon className="navbar-icon" />
+              Accueil
+            </Link>
             <Link to="/recipes" className="navbar-link">
               <BookOpenIcon className="navbar-icon" />
               Recettes
@@ -38,6 +42,10 @@ export default function Navbar() {
               <ShoppingCartIcon className="navbar-icon" />
               Courses
             </Link>
+            <Link to="/contact" className="navbar-link">
+              <EnvelopeIcon className="navbar-icon" />
+              Contact
+            </Link>
             {user.role === 'ADMIN' && (
               <Link to="/admin" className="navbar-link navbar-admin">
                 <ShieldCheckIcon className="navbar-icon" />
@@ -47,10 +55,15 @@ export default function Navbar() {
           </div>
 
           <div className="navbar-user">
-            <span className="navbar-username">Bonjour, {user.name}</span>
+            <Link to="/favorites" className="navbar-link">
+              <HeartIcon className="navbar-icon" />
+            </Link>
+            <Link to="/profile" className="navbar-link navbar-profile">
+              <UserIcon className="navbar-icon" />
+              <span>Bonjour, {user.name}</span>
+            </Link>
             <button onClick={handleLogout} className="navbar-link navbar-logout">
-              <ArrowRightOnRectangleIcon className="navbar-icon" />
-              Déconnexion
+              <PowerIcon className="navbar-icon" />
             </button>
           </div>
         </div>
