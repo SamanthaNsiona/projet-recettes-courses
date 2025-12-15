@@ -59,7 +59,7 @@ const register = async (req, res) => {
     res.status(201).json({
       message: "Utilisateur créé",
       user: safeUser,
-      token: generateToken(user.id),
+      token: generateToken(user.id, user.role),
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -70,29 +70,54 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    console.log('\n════════════════════════════════════════════════════════════');
+    console.log('🔐 TENTATIVE DE CONNEXION');
+    console.log('════════════════════════════════════════════════════════════');
+    console.log('📧 Email:', email);
+    console.log('🔑 Mot de passe reçu:', password ? '***' + password.slice(-3) : 'vide');
+
     // Validation des entrées
     if (!email || !password) {
+      console.log('❌ Validation échouée: champs manquants');
+      console.log('════════════════════════════════════════════════════════════\n');
       return res.status(400).json({ message: "Email et mot de passe requis" });
     }
 
     const user = await prisma.user.findUnique({ where: { email } });
     
+    console.log('👤 Utilisateur trouvé:', user ? 'OUI' : 'NON');
+    if (user) {
+      console.log('   ID:', user.id);
+      console.log('   Rôle:', user.role);
+      console.log('   Hash en DB:', user.password ? user.password.substring(0, 20) + '...' : 'vide');
+    }
+    
     // Protection contre les attaques par timing - toujours comparer même si user inexistant
     const isMatch = user ? await bcrypt.compare(password, user.password) : await bcrypt.compare(password, "$2a$10$dummy.hash.to.prevent.timing.attack");
     
+    console.log('🔍 Comparaison mot de passe:', isMatch ? '✅ MATCH' : '❌ PAS DE MATCH');
+    
     if (!user || !isMatch) {
+      console.log('❌ CONNEXION REFUSÉE');
+      console.log('════════════════════════════════════════════════════════════\n');
       return res.status(401).json({ message: "Email ou mot de passe incorrect" });
     }
 
 
     const { password: _, ...safeUser } = user;
 
+    console.log('✅ CONNEXION RÉUSSIE');
+    console.log('🎫 Token généré avec role:', user.role);
+    console.log('════════════════════════════════════════════════════════════\n');
+
     res.status(200).json({
       message: "Connexion réussie",
       user: safeUser,
-      token: generateToken(user.id),
+      token: generateToken(user.id, user.role),
     });
   } catch (error) {
+    console.log('💥 ERREUR SERVEUR:', error.message);
+    console.log('════════════════════════════════════════════════════════════\n');
     res.status(500).json({ error: error.message });
   }
 };
@@ -183,6 +208,9 @@ const resetPassword = async (req, res) => {
 
     // Hasher le nouveau mot de passe
     const hashedPassword = await bcrypt.hash(newPassword, 10);
+    
+    console.log('🔐 Réinitialisation mot de passe pour:', user.email);
+    console.log('🔐 Nouveau hash généré (longueur):', hashedPassword.length);
 
     // Mettre à jour le mot de passe et supprimer le token
     await prisma.user.update({
@@ -193,6 +221,8 @@ const resetPassword = async (req, res) => {
         resetPasswordExpiry: null,
       },
     });
+    
+    console.log('✅ Mot de passe mis à jour en base de données');
 
     res.status(200).json({ message: "Mot de passe réinitialisé avec succès" });
   } catch (error) {

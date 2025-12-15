@@ -58,18 +58,6 @@ npx prisma studio
 
 ---
 
-## 📝 Variables à remplir dans `.env`
-
-### Backend
-- `JWT_SECRET` - Votre propre clé secrète (min 32 caractères)
-- `EMAIL_PASSWORD` - Mot de passe Gmail (si vous envoyez des emails)
-- `HCAPTCHA_SECRET_KEY` - Clé hCaptcha (si vous utilisez le captcha)
-
-### Frontend
-- `VITE_API_URL` - Déjà configuré : `http://localhost:5000/api`
-
----
-
 ## 🗄️ Base de données
 
 - **Type** : PostgreSQL (Supabase)
@@ -100,7 +88,4 @@ npx prisma generate
 npm install
 ```
 
----
 
-## 📞 Contact
-Demander au responsable du projet pour les identifiants secrets.
