@@ -4,6 +4,7 @@ const prisma = new PrismaClient();
 // 📌 1. Récupérer toutes les recettes (admin uniquement)
 const getAllRecipes = async (req, res) => {
   try {
+    console.log('📖 GET /api/admin/recipes appelé par:', req.user?.email);
     const recipes = await prisma.recipe.findMany({
       include: {
         user: {
@@ -13,6 +14,7 @@ const getAllRecipes = async (req, res) => {
       },
       orderBy: { createdAt: 'desc' }
     });
+    console.log('📖 Recettes trouvées:', recipes.length);
     res.json(recipes);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -22,6 +24,7 @@ const getAllRecipes = async (req, res) => {
 // 📌 2. Récupérer tous les utilisateurs (admin uniquement)
 const getAllUsers = async (req, res) => {
   try {
+    console.log('👥 GET /api/admin/users appelé par:', req.user?.email);
     const users = await prisma.user.findMany({
       select: {
         id: true,
@@ -37,6 +40,7 @@ const getAllUsers = async (req, res) => {
       },
       orderBy: { id: 'desc' }
     });
+    console.log('👥 Utilisateurs trouvés:', users.length);
     res.json(users);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -46,6 +50,7 @@ const getAllUsers = async (req, res) => {
 // 📌 3. Récupérer toutes les listes de courses (admin uniquement)
 const getAllLists = async (req, res) => {
   try {
+    console.log('🛒 GET /api/admin/lists appelé par:', req.user?.email);
     const lists = await prisma.shoppingList.findMany({
       include: {
         user: {
@@ -55,6 +60,7 @@ const getAllLists = async (req, res) => {
       },
       orderBy: { id: 'desc' }
     });
+    console.log('🛒 Listes trouvées:', lists.length);
     res.json(lists);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -130,6 +136,9 @@ const updateUserRole = async (req, res) => {
 // 📌 7. Obtenir les statistiques globales (admin uniquement)
 const getStats = async (req, res) => {
   try {
+    console.log('📊 GET /api/admin/stats appelé');
+    console.log('User:', req.user);
+    
     const [totalUsers, totalRecipes, totalLists, totalPublicRecipes] = await Promise.all([
       prisma.user.count(),
       prisma.recipe.count(),
@@ -137,14 +146,18 @@ const getStats = async (req, res) => {
       prisma.recipe.count({ where: { isPublic: true } })
     ]);
 
-    res.json({
+    const stats = {
       totalUsers,
       totalRecipes,
       totalLists,
       totalPublicRecipes,
       totalPrivateRecipes: totalRecipes - totalPublicRecipes
-    });
+    };
+    
+    console.log('📊 Stats calculées:', stats);
+    res.json(stats);
   } catch (error) {
+    console.error('❌ Erreur getStats:', error);
     res.status(500).json({ error: error.message });
   }
 };
