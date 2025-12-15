@@ -22,14 +22,6 @@ cd frontend
 npm install
 ```
 
-### 3️⃣ Configurer l'environnement
-
-**Backend :**
-- Copier `.env.shared` → `.env`
-- Remplacer les valeurs par défaut (EMAIL_PASSWORD, HCAPTCHA_SECRET_KEY, JWT_SECRET)
-
-**Frontend :**
-- Copier `.env.shared` → `.env`
 
 ### 4️⃣ Lancer l'application
 
@@ -51,7 +43,6 @@ cd backend
 npx prisma studio
 ```
 
-### ✅ C'est bon !
 - Frontend : http://localhost:5174
 - Backend : http://localhost:5000
 - Prisma Studio : http://localhost:5555
@@ -78,16 +69,7 @@ npx prisma studio
 
 ---
 
-## ❓ Problèmes ?
 
-### "Port déjà utilisé"
-```bash
-# Chercher le processus
-netstat -ano | findstr :5000
-
-# Tuer le processus (remplacer PID)
-taskkill /PID <PID> /F
-```
 
 ### "Prisma erreur"
 ```bash
@@ -99,8 +81,3 @@ npx prisma generate
 ```bash
 npm install
 ```
-
----
-
-## 📞 Contact
-Demander au responsable du projet pour les identifiants secrets.
