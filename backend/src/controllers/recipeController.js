@@ -1,7 +1,7 @@
-const { PrismaClient } = require("@prisma/client");
+﻿const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-// 📌 0. Créer une recette
+//  0. Créer une recette
 const createRecipe = async (req, res) => {
   try {
     const { title, description, isPublic, ingredients } = req.body;
@@ -40,7 +40,7 @@ const createRecipe = async (req, res) => {
       }
     });
     
-    console.log('✅ Recette créée:', recipe);
+    console.log(' Recette créée:', recipe);
     
     // Formater la réponse pour le frontend
     const formattedRecipe = {
@@ -50,13 +50,13 @@ const createRecipe = async (req, res) => {
     
     res.status(201).json({ message: "Recette créée", recipe: formattedRecipe });
   } catch (error) {
-    console.error('❌ Erreur lors de la création:', error);
+    console.error(' Erreur lors de la création:', error);
     console.error('📋 Stack trace:', error.stack);
     res.status(500).json({ error: error.message, details: error.stack });
   }
 };
 
-// 📌 1. Récupérer TOUTES les recettes publiques (pour la page "Recettes")
+//  1. Récupérer TOUTES les recettes publiques (pour la page "Recettes")
 const getPublicRecipes = async (req, res) => {
   try {
     const recipes = await prisma.recipe.findMany({
@@ -80,7 +80,7 @@ const getPublicRecipes = async (req, res) => {
   }
 };
 
-// 📌 2. Récupérer les recettes de l'utilisateur connecté (pour la page "Mes Recettes")
+//  2. Récupérer les recettes de l'utilisateur connecté (pour la page "Mes Recettes")
 const getRecipes = async (req, res) => {
   try {
     const recipes = await prisma.recipe.findMany({
@@ -104,7 +104,7 @@ const getRecipes = async (req, res) => {
   }
 };
 
-// 📌 2. Récupérer UNE recette
+//  2. Récupérer UNE recette
 const getRecipeById = async (req, res) => {
   try {
     const recipe = await prisma.recipe.findUnique({
@@ -119,7 +119,7 @@ const getRecipeById = async (req, res) => {
   }
 };
 
-// 📌 3. Modifier une recette
+//  3. Modifier une recette
 const updateRecipe = async (req, res) => {
   try {
     const { title, description, isPublic, ingredients } = req.body;
@@ -160,7 +160,7 @@ const updateRecipe = async (req, res) => {
       }
     });
     
-    console.log('✅ Recette mise à jour:', recipe);
+    console.log(' Recette mise à jour:', recipe);
     
     // Renommer ingredientsList en ingredients pour le frontend
     const formattedRecipe = {
@@ -174,7 +174,7 @@ const updateRecipe = async (req, res) => {
   }
 };
 
-// 📌 4. Supprimer une recette
+//  4. Supprimer une recette
 const deleteRecipe = async (req, res) => {
   try {
     const recipe = await prisma.recipe.findUnique({
@@ -182,7 +182,7 @@ const deleteRecipe = async (req, res) => {
     });
 
     if (!recipe || recipe.userId !== req.user.id) {
-      return res.status(404).json({ message: "Recette introuvable ❌" });
+      return res.status(404).json({ message: "Recette introuvable " });
     }
 
     await prisma.recipe.delete({ where: { id: recipe.id } });
@@ -193,7 +193,7 @@ const deleteRecipe = async (req, res) => {
   }
 };
 
-// 📌 5. Supprimer un ingrédient
+//  5. Supprimer un ingrédient
 const deleteIngredient = async (req, res) => {
   try {
     const ingredientId = parseInt(req.params.id);
@@ -215,7 +215,7 @@ const deleteIngredient = async (req, res) => {
   }
 };
 
-// 📌 6. Ajouter une recette aux favoris
+//  6. Ajouter une recette aux favoris
 const addFavorite = async (req, res) => {
   try {
     const recipeId = parseInt(req.params.id);
@@ -234,7 +234,7 @@ const addFavorite = async (req, res) => {
   }
 };
 
-// 📌 7. Retirer une recette des favoris
+//  7. Retirer une recette des favoris
 const removeFavorite = async (req, res) => {
   try {
     const recipeId = parseInt(req.params.id);
@@ -250,7 +250,7 @@ const removeFavorite = async (req, res) => {
   }
 };
 
-// 📌 8. Récupérer les favoris de l'utilisateur
+//  8. Récupérer les favoris de l'utilisateur
 const getFavorites = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -292,4 +292,5 @@ module.exports = {
   removeFavorite,
   getFavorites
 };
+
 

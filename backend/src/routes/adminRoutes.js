@@ -1,4 +1,4 @@
-const { Router } = require("express");
+﻿const { Router } = require("express");
 const {
   getAllRecipes,
   getAllUsers,
@@ -22,3 +22,4 @@ router.delete("/users/:id", protect, isAdmin, deleteUser);   // Supprimer un uti
 router.put("/users/:id/role", protect, isAdmin, updateUserRole); // Changer le rôle
 
 module.exports = router;
+

@@ -1,4 +1,4 @@
-const express = require('express');
+﻿const express = require('express');
 const axios = require('axios');
 require('dotenv').config();
 
@@ -9,14 +9,14 @@ router.post('/test-hcaptcha', async (req, res) => {
   const { captchaToken } = req.body;
 
   console.log('\n════════════════════════════════════════');
-  console.log('🔐 TEST HCAPTCHA - ENDPOINT');
+  console.log(' TEST HCAPTCHA - ENDPOINT');
   console.log('════════════════════════════════════════');
-  console.log('🔑 Secret Key:', process.env.HCAPTCHA_SECRET_KEY);
-  console.log('🎫 Token reçu:', captchaToken ? captchaToken.substring(0, 50) + '...' : 'AUCUN');
+  console.log(' Secret Key:', process.env.HCAPTCHA_SECRET_KEY);
+  console.log(' Token reçu:', captchaToken ? captchaToken.substring(0, 50) + '...' : 'AUCUN');
   console.log('════════════════════════════════════════\n');
 
   if (!captchaToken) {
-    console.log('❌ Pas de token reçu\n');
+    console.log(' Pas de token reçu\n');
     return res.status(400).json({ error: 'Pas de token' });
   }
 
@@ -30,13 +30,13 @@ router.post('/test-hcaptcha', async (req, res) => {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     });
 
-    console.log('✅ RÉPONSE HCAPTCHA:');
+    console.log(' RÉPONSE HCAPTCHA:');
     console.log(JSON.stringify(response.data, null, 2));
     console.log('════════════════════════════════════════\n');
 
     res.json(response.data);
   } catch (error) {
-    console.log('❌ ERREUR:');
+    console.log(' ERREUR:');
     console.log(error.message);
     console.log('════════════════════════════════════════\n');
     res.status(500).json({ error: error.message });
@@ -44,3 +44,4 @@ router.post('/test-hcaptcha', async (req, res) => {
 });
 
 module.exports = router;
+

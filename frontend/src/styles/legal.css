@@ -1,0 +1,89 @@
+/* ========== PAGES LÉGALES (Privacy Policy, Cookies, Terms) ========== */
+
+.section-spacing {
+  margin-bottom: 2.5rem;
+}
+
+.section-title {
+  font-family: 'Marcellus', serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #171717;
+  margin-bottom: 1rem;
+  margin-top: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.subsection-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #404040;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.text-content {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: #404040;
+  margin-bottom: 1rem;
+  text-align: justify;
+}
+
+.list-content {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: #404040;
+  margin-bottom: 1rem;
+  padding-left: 2rem;
+  list-style-type: disc;
+}
+
+.list-content li {
+  margin-bottom: 0.5rem;
+}
+
+.content-card {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.link-primary {
+  color: #171717;
+  font-weight: 500;
+  text-decoration: underline;
+  transition: opacity 0.3s;
+}
+
+.link-primary:hover {
+  opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+  .content-card {
+    padding: 1.5rem;
+  }
+
+  .section-title {
+    font-size: 1.25rem;
+  }
+
+  .subsection-title {
+    font-size: 1rem;
+  }
+
+  .text-content,
+  .list-content {
+    font-size: 0.9rem;
+  }
+
+  .list-content {
+    padding-left: 1.5rem;
+  }
+}

@@ -1,4 +1,4 @@
-const nodemailer = require('nodemailer');
+﻿const nodemailer = require('nodemailer');
 
 // Créer un transporteur d'email
 const createTransporter = () => {
@@ -17,7 +17,7 @@ const createTransporter = () => {
 
 // Envoyer un email de réinitialisation de mot de passe
 const sendPasswordResetEmail = async (email, resetToken) => {
-  console.log('📧 sendPasswordResetEmail - Début');
+  console.log(' sendPasswordResetEmail - Début');
   console.log('EMAIL_USER:', process.env.EMAIL_USER);
   console.log('EMAIL_PASSWORD défini:', !!process.env.EMAIL_PASSWORD);
   
@@ -77,17 +77,17 @@ const sendPasswordResetEmail = async (email, resetToken) => {
   console.log('Options email configurées, envoi en cours...');
   try {
     const info = await transporter.sendMail(mailOptions);
-    console.log('✅ Email envoyé avec succès! Message ID:', info.messageId);
+    console.log(' Email envoyé avec succès! Message ID:', info.messageId);
     return true;
   } catch (error) {
-    console.error('❌ Erreur lors de l\'envoi de l\'email:', error);
+    console.error(' Erreur lors de l\'envoi de l\'email:', error);
     throw error;
   }
 };
 
 // Envoyer un email de contact vers l'admin
 const sendContactEmail = async (userName, userEmail, subject, message) => {
-  console.log('📧 sendContactEmail - Début');
+  console.log(' sendContactEmail - Début');
   console.log('De:', userName, '(', userEmail, ')');
   console.log('Objet:', subject);
   console.log('Message:', message);
@@ -95,14 +95,14 @@ const sendContactEmail = async (userName, userEmail, subject, message) => {
   // En mode développement ou si l'email n'est pas configuré correctement, on simule l'envoi
   // Le message reste sauvegardé dans contact-messages.json
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD || process.env.EMAIL_PASSWORD.length < 15) {
-    console.log('⚠️ Configuration email non valide - Message sauvegardé mais email non envoyé');
-    console.log('📧 MESSAGE DE CONTACT (voir contact-messages.json):');
+    console.log(' Configuration email non valide - Message sauvegardé mais email non envoyé');
+    console.log(' MESSAGE DE CONTACT (voir contact-messages.json):');
     console.log('===============================================');
     console.log(`De: ${userName} (${userEmail})`);
     console.log(`Objet: ${subject}`);
     console.log(`Message:\n${message}`);
     console.log('===============================================');
-    console.log('💡 Pour activer l\'envoi d\'emails : configurez EMAIL_PASSWORD dans .env avec un mot de passe d\'application Gmail');
+    console.log(' Pour activer l\'envoi d\'emails : configurez EMAIL_PASSWORD dans .env avec un mot de passe d\'application Gmail');
     return true;
   }
   
@@ -142,10 +142,10 @@ const sendContactEmail = async (userName, userEmail, subject, message) => {
   console.log('Envoi email de contact vers:', process.env.ADMIN_EMAIL || process.env.EMAIL_USER);
   try {
     const info = await transporter.sendMail(mailOptions);
-    console.log('✅ Email de contact envoyé avec succès! Message ID:', info.messageId);
+    console.log(' Email de contact envoyé avec succès! Message ID:', info.messageId);
     return true;
   } catch (error) {
-    console.error('❌ Erreur lors de l\'envoi de l\'email de contact:', error);
+    console.error(' Erreur lors de l\'envoi de l\'email de contact:', error);
     throw error;
   }
 };
@@ -154,3 +154,4 @@ module.exports = {
   sendPasswordResetEmail,
   sendContactEmail,
 };
+

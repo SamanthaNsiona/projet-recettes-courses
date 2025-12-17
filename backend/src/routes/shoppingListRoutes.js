@@ -1,4 +1,4 @@
-const express = require("express");
+﻿const express = require("express");
 const { getLists, createList, updateList, deleteList } = require("../controllers/shoppingListController");
 const { protect } = require("../middleware/authMiddleware");
 
@@ -10,3 +10,4 @@ router.put("/:id", protect, updateList);
 router.delete("/:id", protect, deleteList);
 
 module.exports = router;
+

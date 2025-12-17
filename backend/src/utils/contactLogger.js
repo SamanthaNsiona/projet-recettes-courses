@@ -1,4 +1,4 @@
-const fs = require('fs');
+﻿const fs = require('fs');
 const path = require('path');
 
 // Fichier pour stocker les messages de contact
@@ -41,10 +41,10 @@ const saveContactMessage = (userName, userEmail, subject, message) => {
   // Sauvegarder
   try {
     fs.writeFileSync(CONTACT_LOG_FILE, JSON.stringify(messages, null, 2));
-    console.log('✅ Message de contact sauvegardé dans', CONTACT_LOG_FILE);
+    console.log(' Message de contact sauvegardé dans', CONTACT_LOG_FILE);
     return true;
   } catch (error) {
-    console.error('❌ Erreur sauvegarde message:', error);
+    console.error(' Erreur sauvegarde message:', error);
     return false;
   }
 };
@@ -68,3 +68,4 @@ module.exports = {
   saveContactMessage,
   getAllContactMessages
 };
+

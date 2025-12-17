@@ -1,0 +1,238 @@
+/* ========== RECIPES & SHOPPING LISTS ========== */
+.recipe-card {
+  border-bottom: 1px solid #e5e5e5;
+  padding-bottom: 1.5rem;
+}
+
+.recipe-title {
+  font-size: 0.875rem;
+  font-weight: 300;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+}
+
+.recipe-description {
+  color: #737373;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.recipe-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.recipe-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.recipe-status {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.recipe-status-public {
+  color: #171717;
+}
+
+.recipe-status-private {
+  color: #a3a3a3;
+}
+
+/* Ingrédients */
+.ingredients-section {
+  margin-bottom: 1.5rem;
+}
+
+.ingredients-title {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+  color: #404040;
+}
+
+.ingredients-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.ingredient-item {
+  display: flex;
+  align-items: center;
+  background-color: #fafafa;
+  padding: 0.5rem;
+  border: 1px solid #e5e5e5;
+  font-size: 0.75rem;
+  color: #737373;
+}
+
+.ingredient-item-edit {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  background-color: #fafafa;
+  padding: 0.75rem;
+  border: 1px solid #e5e5e5;
+  font-size: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.ingredient-text {
+  flex: 1;
+}
+
+/* Listes de courses */
+.shopping-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem;
+  background-color: #fafafa;
+  border: 1px solid #e5e5e5;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.shopping-list-item:hover {
+  border-color: #737373;
+}
+
+.shopping-list-item-selected {
+  border-color: #171717;
+  background-color: #f5f5f5;
+}
+
+.shopping-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem;
+  background-color: #fafafa;
+  border: 1px solid #e5e5e5;
+  margin-bottom: 0.5rem;
+}
+
+.shopping-item-name {
+  font-weight: 300;
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+}
+
+.shopping-item-details {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.shopping-item-quantity {
+  color: #737373;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+}
+
+.list-title-text {
+  font-weight: 300;
+  font-size: 0.875rem;
+  letter-spacing: 0.025em;
+}
+
+/* Grilles */
+.grid-recipes {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.grid-shopping {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+@media (min-width: 768px) {
+  .grid-shopping {
+    flex-direction: row;
+    gap: 3rem;
+  }
+  
+  .grid-shopping > div:first-child {
+    flex: 0 0 350px;
+  }
+  
+  .grid-shopping > div:last-child {
+    flex: 1;
+  }
+}
+
+.grid-form {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.col-span-1 { flex: 0 0 calc(8.333% - 0.625rem); }
+.col-span-2 { flex: 0 0 calc(16.666% - 0.625rem); }
+.col-span-6 { flex: 0 0 calc(50% - 0.625rem); }
+.col-span-9 { flex: 0 0 calc(75% - 0.625rem); }
+.col-span-12 { flex: 0 0 100%; }
+
+/* Titre de section simple */
+.section-title-simple {
+  font-size: 0.875rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #171717;
+  margin-bottom: 1.5rem;
+  border: none;
+  padding: 0;
+}
+
+/* Items de shopping list avec flex */
+.shopping-item-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Item checked */
+.item-checked {
+  text-decoration: line-through;
+  color: #a3a3a3;
+}
+
+/* Header de liste */
+.shopping-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.shopping-list-header-title {
+  margin: 0;
+}
+
+/* Formulaire de création de liste */
+.create-list-form {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.create-list-input {
+  flex: 1;
+}

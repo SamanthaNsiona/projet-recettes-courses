@@ -1,4 +1,4 @@
-const rateLimit = require('express-rate-limit');
+﻿const rateLimit = require('express-rate-limit');
 
 // Rate limiter pour les tentatives de connexion
 const loginLimiter = rateLimit({
@@ -25,7 +25,7 @@ const registerLimiter = rateLimit({
 // Rate limiter pour les requêtes API générales
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Maximum 100 requêtes par 15 minutes
+  max: 500, // Maximum 500 requêtes par 15 minutes (augmenté pour le dev)
   message: {
     error: 'Trop de requêtes. Veuillez réessayer plus tard.'
   },
@@ -50,3 +50,4 @@ module.exports = {
   apiLimiter,
   passwordResetLimiter
 };
+

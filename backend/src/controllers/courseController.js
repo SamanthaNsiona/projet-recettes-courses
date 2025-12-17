@@ -1,4 +1,4 @@
-const { PrismaClient } = require("@prisma/client");
+﻿const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 // GET all courses
@@ -57,3 +57,4 @@ const deleteCourse = async (req, res) => {
 };
 
 module.exports = { getCourses, createCourse, updateCourse, deleteCourse };
+

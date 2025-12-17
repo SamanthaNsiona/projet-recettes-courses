@@ -42,10 +42,7 @@ export default function Navbar() {
               <ShoppingCartIcon className="navbar-icon" />
               Courses
             </Link>
-            <Link to="/contact" className="navbar-link">
-              <EnvelopeIcon className="navbar-icon" />
-              Contact
-            </Link>
+
             {user.role === 'ADMIN' && (
               <Link to="/admin" className="navbar-link navbar-admin">
                 <ShieldCheckIcon className="navbar-icon" />

@@ -1,0 +1,149 @@
+/* ========== AUTHENTIFICATION ========== */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f5f5f5;
+  padding: 2rem;
+}
+
+.auth-box {
+  background-color: white;
+  padding: 3rem 2.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  max-width: 450px;
+  width: 100%;
+}
+
+.auth-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.auth-title {
+  color: #000000;
+  font-size: 1.5rem;
+  letter-spacing: 2px;
+  margin-bottom: 2rem;
+  font-weight: 400;
+  text-align: center;
+}
+
+.auth-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.auth-input-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.auth-page .form-label,
+.auth-box .form-label {
+  color: #8f8f8f;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 300;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: #e8f2ff;
+  border: none;
+  font-size: 0.95rem;
+  color: #666;
+}
+
+.auth-input:focus {
+  outline: none;
+  background-color: #dceaff;
+}
+
+.auth-submit-wrapper {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.auth-button.btn-primary {
+  background-color: #000;
+  color: white;
+  padding: 0.75rem 2.5rem;
+  border: none;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-weight: 500;
+}
+
+.auth-button.btn-primary:hover:not(:disabled) {
+  background-color: #333;
+}
+
+.auth-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.auth-forgot-link {
+  color: #888;
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.auth-forgot-link:hover {
+  color: #555;
+}
+
+.auth-footer-text {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #888;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.auth-link {
+  color: #000;
+  text-decoration: underline;
+  font-weight: 500;
+  transition: opacity 0.3s;
+}
+
+.auth-link:hover {
+  opacity: 0.7;
+}
+
+.message-error {
+  background-color: #fee;
+  color: #c33;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.auth-captcha-wrapper {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+}

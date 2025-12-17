@@ -16,7 +16,7 @@ export default function Login() {
 
     try {
       await login(formData);
-      navigate('/recipes');
+      navigate('/');
     } catch (err) {
       console.log('Erreur complète:', err);
       console.log('Réponse:', err.response);

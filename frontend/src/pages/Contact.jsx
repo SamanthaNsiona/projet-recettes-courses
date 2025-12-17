@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useAuth } from '../contexts/AuthContext';
 import { EnvelopeIcon } from '@heroicons/react/24/outline';
 import { contactService } from '../services/contactService';
 
 export default function Contact() {
+  const { isAuthenticated } = useAuth();
   const [formData, setFormData] = useState({
     subject: '',
     message: ''
@@ -21,24 +23,26 @@ export default function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setError('');
     setStatus('');
-    
-    console.log('==============================================');
-    console.log('📤 ENVOI MESSAGE DE CONTACT');
-    console.log('==============================================');
+
+    if (!isAuthenticated) {
+      setError("Vous devez être connecté pour envoyer un message de contact.");
+      return;
+    }
+
+    setLoading(true);
+    console.log('ENVOI MESSAGE DE CONTACT');
     console.log('Subject:', formData.subject);
     console.log('Message:', formData.message);
-    
     try {
-      console.log('🔄 Appel API en cours...');
+      console.log('Appel API en cours...');
       const response = await contactService.sendMessage(formData.subject, formData.message);
-      console.log('✅ Réponse reçue:', response);
+      console.log('Réponse reçue:', response);
       setStatus(response.message || 'Message envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.');
       setFormData({ subject: '', message: '' });
     } catch (err) {
-      console.error('❌ ERREUR lors de l\'envoi');
+      console.error('ERREUR lors de l\'envoi');
       console.error('Error object:', err);
       console.error('Response:', err.response);
       console.error('Status:', err.response?.status);
@@ -46,7 +50,6 @@ export default function Contact() {
       setError(err.response?.data?.message || 'Erreur lors de l\'envoi du message. Veuillez réessayer.');
     } finally {
       setLoading(false);
-      console.log('==============================================');
       setTimeout(() => {
         setStatus('');
         setError('');

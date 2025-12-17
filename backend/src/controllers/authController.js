@@ -1,4 +1,4 @@
-const { PrismaClient } = require("@prisma/client");
+﻿const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const axios = require("axios");
@@ -11,13 +11,16 @@ const register = async (req, res) => {
   try {
     const { name, email, password, role, captchaToken } = req.body;
 
+    // Convertir l'email en minuscules
+    const normalizedEmail = email.toLowerCase().trim();
+
     console.log('\n');
     console.log('═══════════════════════════════════════════════════════════');
-    console.log('📝 NOUVELLE INSCRIPTION');
+    console.log(' NOUVELLE INSCRIPTION');
     console.log('═══════════════════════════════════════════════════════════');
-    console.log('✉️  Email:', email);
-    console.log('👤 Nom:', name);
-    console.log('🎫 Captcha: ✅ VALIDÉ PAR MIDDLEWARE');
+    console.log('  Email:', normalizedEmail);
+    console.log(' Nom:', name);
+    console.log(' Captcha:  VALIDÉ PAR MIDDLEWARE');
     console.log('═══════════════════════════════════════════════════════════\n');
 
     // Validation des entrées
@@ -27,11 +30,11 @@ const register = async (req, res) => {
     if (password.length < 6) {
       return res.status(400).json({ message: "Le mot de passe doit contenir au moins 6 caractères" });
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
       return res.status(400).json({ message: "Email invalide" });
     }
 
-    const userExists = await prisma.user.findUnique({ where: { email } });
+    const userExists = await prisma.user.findUnique({ where: { email: normalizedEmail } });
     if (userExists) return res.status(400).json({ message: "Email déjà utilisé" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -39,7 +42,7 @@ const register = async (req, res) => {
     const user = await prisma.user.create({
       data: {
         name,
-        email,
+        email: normalizedEmail,
         password: hashedPassword,
         role: role || "USER",
       },
@@ -49,7 +52,7 @@ const register = async (req, res) => {
     const { password: _, ...safeUser } = user;
 
     console.log('════════════════════════════════════════════════════════════');
-    console.log('✅ INSCRIPTION RÉUSSIE');
+    console.log(' INSCRIPTION RÉUSSIE');
     console.log('════════════════════════════════════════════════════════════');
     console.log('ID:', user.id);
     console.log('Email:', user.email);
@@ -70,22 +73,25 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    // Convertir l'email en minuscules
+    const normalizedEmail = email.toLowerCase().trim();
+
     console.log('\n════════════════════════════════════════════════════════════');
-    console.log('🔐 TENTATIVE DE CONNEXION');
+    console.log(' TENTATIVE DE CONNEXION');
     console.log('════════════════════════════════════════════════════════════');
-    console.log('📧 Email:', email);
-    console.log('🔑 Mot de passe reçu:', password ? '***' + password.slice(-3) : 'vide');
+    console.log(' Email:', normalizedEmail);
+    console.log(' Mot de passe reçu:', password ? '***' + password.slice(-3) : 'vide');
 
     // Validation des entrées
     if (!email || !password) {
-      console.log('❌ Validation échouée: champs manquants');
+      console.log(' Validation échouée: champs manquants');
       console.log('════════════════════════════════════════════════════════════\n');
       return res.status(400).json({ message: "Email et mot de passe requis" });
     }
 
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.user.findUnique({ where: { email: normalizedEmail } });
     
-    console.log('👤 Utilisateur trouvé:', user ? 'OUI' : 'NON');
+    console.log(' Utilisateur trouvé:', user ? 'OUI' : 'NON');
     if (user) {
       console.log('   ID:', user.id);
       console.log('   Rôle:', user.role);
@@ -95,10 +101,10 @@ const login = async (req, res) => {
     // Protection contre les attaques par timing - toujours comparer même si user inexistant
     const isMatch = user ? await bcrypt.compare(password, user.password) : await bcrypt.compare(password, "$2a$10$dummy.hash.to.prevent.timing.attack");
     
-    console.log('🔍 Comparaison mot de passe:', isMatch ? '✅ MATCH' : '❌ PAS DE MATCH');
+    console.log(' Comparaison mot de passe:', isMatch ? ' MATCH' : ' PAS DE MATCH');
     
     if (!user || !isMatch) {
-      console.log('❌ CONNEXION REFUSÉE');
+      console.log(' CONNEXION REFUSÉE');
       console.log('════════════════════════════════════════════════════════════\n');
       return res.status(401).json({ message: "Email ou mot de passe incorrect" });
     }
@@ -106,8 +112,8 @@ const login = async (req, res) => {
 
     const { password: _, ...safeUser } = user;
 
-    console.log('✅ CONNEXION RÉUSSIE');
-    console.log('🎫 Token généré avec role:', user.role);
+    console.log(' CONNEXION RÉUSSIE');
+    console.log(' Token généré avec role:', user.role);
     console.log('════════════════════════════════════════════════════════════\n');
 
     res.status(200).json({
@@ -116,7 +122,7 @@ const login = async (req, res) => {
       token: generateToken(user.id, user.role),
     });
   } catch (error) {
-    console.log('💥 ERREUR SERVEUR:', error.message);
+    console.log(' ERREUR SERVEUR:', error.message);
     console.log('════════════════════════════════════════════════════════════\n');
     res.status(500).json({ error: error.message });
   }
@@ -127,12 +133,15 @@ const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
     
+    // Convertir l'email en minuscules
+    const normalizedEmail = email.toLowerCase().trim();
+    
     // Validation de l'email
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
       return res.status(400).json({ message: "Email invalide" });
     }
 
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.user.findUnique({ where: { email: normalizedEmail } });
     
     if (!user) {
       // Pour la sécurité, on renvoie toujours un message positif même si l'utilisateur n'existe pas
@@ -157,8 +166,8 @@ const forgotPassword = async (req, res) => {
 
     // Envoyer l'email avec le lien de réinitialisation
     try {
-      await sendPasswordResetEmail(email, resetToken);
-      console.log(`Email de réinitialisation envoyé à ${email}`);
+      await sendPasswordResetEmail(normalizedEmail, resetToken);
+      console.log(`Email de réinitialisation envoyé à ${normalizedEmail}`);
     } catch (emailError) {
       console.error('Erreur lors de l\'envoi de l\'email');
       // Ne PAS afficher le token en production
@@ -209,8 +218,8 @@ const resetPassword = async (req, res) => {
     // Hasher le nouveau mot de passe
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     
-    console.log('🔐 Réinitialisation mot de passe pour:', user.email);
-    console.log('🔐 Nouveau hash généré (longueur):', hashedPassword.length);
+    console.log(' Réinitialisation mot de passe pour:', user.email);
+    console.log(' Nouveau hash généré (longueur):', hashedPassword.length);
 
     // Mettre à jour le mot de passe et supprimer le token
     await prisma.user.update({
@@ -222,7 +231,7 @@ const resetPassword = async (req, res) => {
       },
     });
     
-    console.log('✅ Mot de passe mis à jour en base de données');
+    console.log(' Mot de passe mis à jour en base de données');
 
     res.status(200).json({ message: "Mot de passe réinitialisé avec succès" });
   } catch (error) {
@@ -310,3 +319,4 @@ const deleteAccount = async (req, res) => {
 };
 
 module.exports = { register, login, forgotPassword, resetPassword, getCurrentUser, changePassword, deleteAccount };
+

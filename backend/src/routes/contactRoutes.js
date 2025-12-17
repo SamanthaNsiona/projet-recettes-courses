@@ -1,4 +1,4 @@
-const express = require('express');
+﻿const express = require('express');
 const router = express.Router();
 const { sendContact, getContactMessages } = require('../controllers/contactController');
 const { protect } = require('../middleware/authMiddleware');
@@ -10,3 +10,4 @@ router.post('/', protect, sendContact);
 router.get('/messages', protect, getContactMessages);
 
 module.exports = router;
+

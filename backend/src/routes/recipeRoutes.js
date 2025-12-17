@@ -1,4 +1,4 @@
-const { Router } = require("express");
+﻿const { Router } = require("express");
 const {
   createRecipe,
   getPublicRecipes,
@@ -27,3 +27,4 @@ router.post("/:id/favorite", protect, addFavorite);    //  Ajouter aux favoris
 router.delete("/:id/favorite", protect, removeFavorite); //  Retirer des favoris
 
 module.exports = router;
+

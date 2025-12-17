@@ -31,7 +31,7 @@ export default function Home() {
     fetchRecipes();
   }, [user]);
 
-  console.log('📄 Home page rendu - user:', user ? user.name : 'non connecté');
+  console.log('Home page rendu - user:', user ? user.name : 'non connecté');
 
   return (
     <main className="page-container">

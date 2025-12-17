@@ -1,0 +1,147 @@
+/* ========== BOUTONS ========== */
+.btn-primary {
+  background-color: #171717;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  transition: background-color 0.3s;
+  border: none;
+  cursor: pointer;
+  border-radius: 0.25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.btn-primary:hover {
+  background-color: #404040;
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: #e5e5e5;
+  color: #171717;
+  padding: 0.75rem 1.5rem;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  transition: background-color 0.3s;
+  border: none;
+  cursor: pointer;
+  border-radius: 0.25rem;
+  text-decoration: none;
+}
+
+.btn-secondary:hover {
+  background-color: #d4d4d4;
+}
+
+.btn-delete {
+  background-color: #ef4444;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  text-decoration: none;
+}
+
+.btn-delete:hover {
+  background-color: #dc2626;
+}
+
+.btn-edit {
+  background-color: #171717;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  text-decoration: none;
+}
+
+.btn-edit:hover {
+  background-color: #404040;
+}
+
+.btn-outline {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid #171717;
+  color: #171717;
+  background-color: transparent;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  transition: all 0.3s;
+  cursor: pointer;
+  border-radius: 0.25rem;
+  text-decoration: none;
+}
+
+.btn-outline:hover {
+  background-color: #171717;
+  color: white;
+}
+
+.btn-add {
+  background-color: #171717;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  transition: background-color 0.3s;
+  border: none;
+  cursor: pointer;
+  border-radius: 0.25rem;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  font-weight: bold;
+  text-decoration: none;
+  max-width: fit-content;
+}
+
+.btn-add:hover {
+  background-color: #404040;
+}
+
+.btn-danger {
+  background-color: #ef4444;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  transition: background-color 0.3s;
+  border: none;
+  cursor: pointer;
+  border-radius: 0.25rem;
+  font-weight: bold;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.btn-danger:hover {
+  background-color: #dc2626;
+}

@@ -173,7 +173,7 @@ export default function MyRecipes() {
           setNewIngredient({ name: '', quantity: '' });
         }}
         className="btn-add"
-        style={{ marginBottom: '2rem' }}
+        style={{ marginBottom: '2rem', display: 'flex', margin: '0 auto 2rem auto' }}
       >
         <PlusIcon className="icon" />
         Nouvelle recette

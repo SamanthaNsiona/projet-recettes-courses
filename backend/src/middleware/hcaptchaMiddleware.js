@@ -1,14 +1,14 @@
-// Middleware pour vérifier hCaptcha
+﻿// Middleware pour vérifier hCaptcha
 async function verifyHCaptchaMiddleware(req, res, next) {
   const token = req.body.captchaToken;
   
   console.log('\n════════════════════════════════════════════════════════════');
-  console.log('🔐 VÉRIFICATION HCAPTCHA MIDDLEWARE');
+  console.log(' VÉRIFICATION HCAPTCHA MIDDLEWARE');
   console.log('════════════════════════════════════════════════════════════');
-  console.log('Token reçu:', token ? '✅ OUI' : '❌ NON');
+  console.log('Token reçu:', token ? ' OUI' : ' NON');
 
   if (!token) {
-    console.log('❌ Captcha manquant');
+    console.log(' Captcha manquant');
     console.log('════════════════════════════════════════════════════════════\n');
     return res.status(400).json({ error: "Captcha manquant" });
   }
@@ -25,7 +25,7 @@ async function verifyHCaptchaMiddleware(req, res, next) {
     console.log('📡 Réponse hCaptcha:', JSON.stringify(data, null, 2));
 
     if (!data.success) {
-      console.log('❌ Captcha invalide - Erreurs:', data['error-codes']);
+      console.log(' Captcha invalide - Erreurs:', data['error-codes']);
       
       // Vérifier les erreurs spécifiques
       if (data['error-codes']?.includes('sitekey-secret-mismatch')) {
@@ -50,14 +50,15 @@ async function verifyHCaptchaMiddleware(req, res, next) {
       });
     }
 
-    console.log('✅ Captcha valide - Passage à next()');
+    console.log(' Captcha valide - Passage à next()');
     console.log('════════════════════════════════════════════════════════════\n');
     next();
   } catch (err) {
-    console.error('❌ Erreur hCaptcha:', err.message);
+    console.error(' Erreur hCaptcha:', err.message);
     console.log('════════════════════════════════════════════════════════════\n');
     return res.status(500).json({ error: "Erreur lors de la vérification captcha" });
   }
 }
 
 module.exports = { verifyHCaptchaMiddleware };
+

@@ -36,18 +36,18 @@ export default function ShoppingLists() {
 
   const createList = async (e) => {
     e.preventDefault();
-    console.log('📝 Création liste - titre:', newListTitle);
+    console.log('Création liste - titre:', newListTitle);
     if (!newListTitle.trim()) return;
 
     try {
       const result = await shoppingListService.create({
         title: newListTitle
       });
-      console.log('✅ Liste créée:', result);
+      console.log('Liste créée:', result);
       setNewListTitle('');
       loadLists();
     } catch (error) {
-      console.error('❌ Erreur lors de la création de la liste', error);
+      console.error('Erreur lors de la création de la liste', error);
       console.error('Détails:', error.response?.data);
     }
   };
@@ -140,21 +140,21 @@ export default function ShoppingLists() {
       <div className="grid-shopping">
         {/* Liste des listes */}
         <div className="section-divider">
-          <h2 className="form-title">Mes listes</h2>
+          <h2 className="section-title-simple">
+            MES LISTES
+          </h2>
           
-          <form onSubmit={createList} className="mb-8">
-            <div className="flex-gap-4">
-              <input
-                type="text"
-                value={newListTitle}
-                onChange={(e) => setNewListTitle(e.target.value)}
-                placeholder="Nouvelle liste..."
-                className="flex-1 form-input"
-              />
-              <button type="submit" className="btn-add">
-                <PlusIcon className="icon" />
-              </button>
-            </div>
+          <form onSubmit={createList} className="create-list-form">
+            <input
+              type="text"
+              value={newListTitle}
+              onChange={(e) => setNewListTitle(e.target.value)}
+              placeholder="Nouvelle liste..."
+              className="create-list-input form-input"
+            />
+            <button type="submit" className="btn-add">
+              <PlusIcon className="icon" />
+            </button>
           </form>
 
           <div className="space-y-2">
@@ -192,18 +192,14 @@ export default function ShoppingLists() {
         <div className="section-divider">
           {selectedList ? (
             <>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-                <h2 className="form-title" style={{ margin: 0 }}>{selectedList.title}</h2>
-                <button
-                  onClick={handlePrint}
-                  className="btn-outline"
-                  style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
-                >
+              <div className="shopping-list-header">
+                <h2 className="shopping-list-header-title form-title">{selectedList.title}</h2>
+                <button onClick={handlePrint} className="btn-outline">
                   Imprimer
                 </button>
               </div>
 
-              <form onSubmit={addItem} className="mb-8">
+              <form onSubmit={addItem} className="create-list-form">
                 <div className="grid-form">
                   <input
                     type="text"
@@ -236,27 +232,19 @@ export default function ShoppingLists() {
 
               <div className="space-y-2">
                 {items.map((item) => (
-                  <div key={item.id} className="shopping-item" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <div key={item.id} className="shopping-item shopping-item-wrapper">
                     <input
                       type="checkbox"
                       checked={item.checked || false}
                       onChange={() => toggleChecked(item)}
                       className="form-checkbox"
-                      style={{ width: '1.25rem', height: '1.25rem', cursor: 'pointer' }}
                     />
-                    <span className="shopping-item-name" style={{ 
-                      textDecoration: item.checked ? 'line-through' : 'none',
-                      color: item.checked ? '#a3a3a3' : 'inherit',
-                      flex: 1
-                    }}>
+                    <span className={`shopping-item-name ${item.checked ? 'item-checked' : ''}`}>
                       {item.name}
                     </span>
                     <div className="shopping-item-details">
                       {item.quantity && (
-                        <span className="shopping-item-quantity" style={{ 
-                          textDecoration: item.checked ? 'line-through' : 'none',
-                          color: item.checked ? '#a3a3a3' : 'inherit'
-                        }}>
+                        <span className={`shopping-item-quantity ${item.checked ? 'item-checked' : ''}`}>
                           {item.quantity} {item.unit}
                         </span>
                       )}
@@ -265,7 +253,7 @@ export default function ShoppingLists() {
                         className="btn-delete"
                         title="Supprimer cet article"
                       >
-                        ✕
+                        <TrashIcon className="icon" />
                       </button>
                     </div>
                   </div>

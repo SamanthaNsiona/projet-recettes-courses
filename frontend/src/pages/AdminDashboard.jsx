@@ -13,6 +13,7 @@ export default function AdminDashboard() {
   const [users, setUsers] = useState([]);
   const [recipes, setRecipes] = useState([]);
   const [lists, setLists] = useState([]);
+  const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('stats');
   
@@ -33,27 +34,67 @@ export default function AdminDashboard() {
   const loadData = async () => {
     try {
       setLoading(true);
-      console.log('🔄 Chargement des données admin...');
       
-      const [statsData, usersData, recipesData, listsData] = await Promise.all([
+      // Vérifier le token actuel
+      const token = localStorage.getItem('token');
+      if (token) {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        console.log('TOKEN ACTUEL:', payload);
+        console.log('Token contient role?', 'role' in payload ? 'OUI' : 'NON');
+      }
+      
+      console.log('Chargement des données admin...');
+      
+      // Charger les données avec Promise.allSettled pour ne pas bloquer si une requête échoue
+      const results = await Promise.allSettled([
         adminService.getStats(),
         adminService.getAllUsers(),
         adminService.getAllRecipes(),
         adminService.getAllLists()
       ]);
       
-      console.log('📊 Stats reçues:', statsData);
-      console.log('👥 Utilisateurs reçus:', usersData?.length, 'utilisateurs');
-      console.log('📖 Recettes reçues:', recipesData?.length, 'recettes');
-      console.log('🛒 Listes reçues:', listsData?.length, 'listes');
+      const statsData = results[0].status === 'fulfilled' ? results[0].value : null;
+      const usersData = results[1].status === 'fulfilled' ? results[1].value : [];
+      const recipesData = results[2].status === 'fulfilled' ? results[2].value : [];
+      const listsData = results[3].status === 'fulfilled' ? results[3].value : [];
+      
+      // Charger les messages séparément pour ne pas bloquer si ça échoue
+      let messagesData = [];
+      try {
+        messagesData = await adminService.getMessages();
+      } catch (error) {
+        console.error('Erreur chargement messages:', error);
+      }
+      
+      console.log('Stats reçues:', statsData);
+      console.log('Utilisateurs reçus:', usersData?.length, 'utilisateurs');
+      console.log('Recettes reçues:', recipesData?.length, 'recettes');
+      console.log('Listes reçues:', listsData?.length, 'listes');
+      console.log('Messages reçus:', messagesData?.length, 'messages');
+      
+      // Afficher les erreurs éventuelles
+      results.forEach((result, index) => {
+        if (result.status === 'rejected') {
+          const names = ['Stats', 'Users', 'Recipes', 'Lists'];
+          console.error(`Erreur ${names[index]}:`, result.reason);
+        }
+      });
       
       setStats(statsData);
       setUsers(usersData);
       setRecipes(recipesData);
       setLists(listsData);
+      setMessages(messagesData);
     } catch (error) {
-      console.error('❌ Erreur chargement données admin:', error);
-      console.error('Détails:', error.response?.data || error.message);
+      console.error('ERREUR chargement données admin:', error);
+      console.error('Status:', error.response?.status);
+      console.error('Message:', error.response?.data?.message || error.message);
+      console.error('Réponse complète:', error.response?.data);
+      
+      // Si erreur 403, c'est probablement un problème de token
+      if (error.response?.status === 403) {
+        alert('Erreur d\'autorisation. Veuillez vous déconnecter et vous reconnecter pour obtenir un nouveau token.');
+      }
     } finally {
       setLoading(false);
     }
@@ -77,16 +118,6 @@ export default function AdminDashboard() {
       loadData(); // Recharger les stats
     } catch (error) {
       console.error('Erreur suppression:', error);
-    }
-  };
-
-  const handleRoleToggle = async (userId, currentRole) => {
-    try {
-      const newRole = currentRole === 'ADMIN' ? 'USER' : 'ADMIN';
-      await adminService.updateUserRole(userId, newRole);
-      loadData();
-    } catch (error) {
-      console.error('Erreur changement rôle:', error);
     }
   };
 
@@ -130,6 +161,12 @@ export default function AdminDashboard() {
           onClick={() => setActiveTab('lists')}
         >
           Listes ({lists.length})
+        </button>
+        <button 
+          className={`admin-tab ${activeTab === 'messages' ? 'active' : ''}`}
+          onClick={() => setActiveTab('messages')}
+        >
+          Messagerie ({messages.length})
         </button>
       </div>
 
@@ -189,20 +226,12 @@ export default function AdminDashboard() {
                   <td>{u._count?.lists || 0}</td>
                   <td className="admin-table-actions">
                     {u.id !== user.id && (
-                      <>
-                        <button 
-                          onClick={() => handleRoleToggle(u.id, u.role)}
-                          className="btn-secondary btn-sm"
-                        >
-                          {u.role === 'ADMIN' ? '→ USER' : '→ ADMIN'}
-                        </button>
-                        <button 
-                          onClick={() => confirmDelete('user', u)}
-                          className="btn-delete btn-sm"
-                        >
-                          <TrashIcon className="icon" />
-                        </button>
-                      </>
+                      <button 
+                        onClick={() => confirmDelete('user', u)}
+                        className="btn-delete btn-sm"
+                      >
+                        <TrashIcon className="icon" />
+                      </button>
                     )}
                   </td>
                 </tr>
@@ -237,7 +266,7 @@ export default function AdminDashboard() {
                       {r.isPublic ? 'Oui' : 'Non'}
                     </span>
                   </td>
-                  <td>{r.ingredients?.length || 0}</td>
+                  <td>{r.ingredientsList?.length || 0}</td>
                   <td className="admin-table-actions">
                     <button 
                       onClick={() => confirmDelete('recipe', r)}
@@ -276,6 +305,47 @@ export default function AdminDashboard() {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {/* Messagerie */}
+      {activeTab === 'messages' && (
+        <div className="admin-table-container">
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Date</th>
+                <th>Utilisateur</th>
+                <th>Sujet</th>
+                <th>Message</th>
+                <th>Statut</th>
+              </tr>
+            </thead>
+            <tbody>
+              {messages.map(m => (
+                <tr key={m.id}>
+                  <td>{m.id}</td>
+                  <td>{new Date(m.createdAt).toLocaleDateString('fr-FR')}</td>
+                  <td>{m.user?.name || m.user?.email}</td>
+                  <td>{m.subject || 'Contact'}</td>
+                  <td style={{ maxWidth: '300px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {m.message}
+                  </td>
+                  <td>
+                    <span className={`admin-badge ${m.read ? 'admin-badge-gray' : 'admin-badge-blue'}`}>
+                      {m.read ? 'Lu' : 'Nouveau'}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {messages.length === 0 && (
+            <div style={{ textAlign: 'center', padding: '2rem', color: '#666' }}>
+              Aucun message pour le moment
+            </div>
+          )}
         </div>
       )}
 

@@ -1,30 +1,33 @@
-const { PrismaClient } = require("@prisma/client");
+﻿const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-// 📌 1. Récupérer toutes les recettes (admin uniquement)
+//  1. Récupérer toutes les recettes (admin uniquement)
 const getAllRecipes = async (req, res) => {
   try {
-    console.log('📖 GET /api/admin/recipes appelé par:', req.user?.email);
+    console.log(' GET /api/admin/recipes appelé par:', req.user?.email);
     const recipes = await prisma.recipe.findMany({
       include: {
         user: {
           select: { id: true, name: true, email: true, role: true }
         },
-        ingredients: true
+        ingredientsList: true
       },
       orderBy: { createdAt: 'desc' }
     });
-    console.log('📖 Recettes trouvées:', recipes.length);
+    console.log(' Recettes trouvées:', recipes.length);
     res.json(recipes);
   } catch (error) {
+    console.error(' ERREUR getAllRecipes:', error);
+    console.error(' Message:', error.message);
+    console.error(' Stack:', error.stack);
     res.status(500).json({ error: error.message });
   }
 };
 
-// 📌 2. Récupérer tous les utilisateurs (admin uniquement)
+//  2. Récupérer tous les utilisateurs (admin uniquement)
 const getAllUsers = async (req, res) => {
   try {
-    console.log('👥 GET /api/admin/users appelé par:', req.user?.email);
+    console.log(' GET /api/admin/users appelé par:', req.user?.email);
     const users = await prisma.user.findMany({
       select: {
         id: true,
@@ -40,17 +43,17 @@ const getAllUsers = async (req, res) => {
       },
       orderBy: { id: 'desc' }
     });
-    console.log('👥 Utilisateurs trouvés:', users.length);
+    console.log(' Utilisateurs trouvés:', users.length);
     res.json(users);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-// 📌 3. Récupérer toutes les listes de courses (admin uniquement)
+//  3. Récupérer toutes les listes de courses (admin uniquement)
 const getAllLists = async (req, res) => {
   try {
-    console.log('🛒 GET /api/admin/lists appelé par:', req.user?.email);
+    console.log(' GET /api/admin/lists appelé par:', req.user?.email);
     const lists = await prisma.shoppingList.findMany({
       include: {
         user: {
@@ -60,14 +63,14 @@ const getAllLists = async (req, res) => {
       },
       orderBy: { id: 'desc' }
     });
-    console.log('🛒 Listes trouvées:', lists.length);
+    console.log(' Listes trouvées:', lists.length);
     res.json(lists);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-// 📌 4. Supprimer une recette (admin uniquement)
+//  4. Supprimer une recette (admin uniquement)
 const deleteRecipe = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
@@ -84,7 +87,7 @@ const deleteRecipe = async (req, res) => {
   }
 };
 
-// 📌 5. Supprimer un utilisateur (admin uniquement)
+//  5. Supprimer un utilisateur (admin uniquement)
 const deleteUser = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
@@ -106,7 +109,7 @@ const deleteUser = async (req, res) => {
   }
 };
 
-// 📌 6. Changer le rôle d'un utilisateur (admin uniquement)
+//  6. Changer le rôle d'un utilisateur (admin uniquement)
 const updateUserRole = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
@@ -133,10 +136,10 @@ const updateUserRole = async (req, res) => {
   }
 };
 
-// 📌 7. Obtenir les statistiques globales (admin uniquement)
+//  7. Obtenir les statistiques globales (admin uniquement)
 const getStats = async (req, res) => {
   try {
-    console.log('📊 GET /api/admin/stats appelé');
+    console.log(' GET /api/admin/stats appelé');
     console.log('User:', req.user);
     
     const [totalUsers, totalRecipes, totalLists, totalPublicRecipes] = await Promise.all([
@@ -154,10 +157,10 @@ const getStats = async (req, res) => {
       totalPrivateRecipes: totalRecipes - totalPublicRecipes
     };
     
-    console.log('📊 Stats calculées:', stats);
+    console.log(' Stats calculées:', stats);
     res.json(stats);
   } catch (error) {
-    console.error('❌ Erreur getStats:', error);
+    console.error(' Erreur getStats:', error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -171,3 +174,4 @@ module.exports = {
   updateUserRole,
   getStats
 };
+
